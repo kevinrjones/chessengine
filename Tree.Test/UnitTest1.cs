@@ -23,7 +23,7 @@ namespace Tree.Test
         [Test]
         public void ShouldHaveChildren()
         {
-            var root = new MaxNode(_evaluator.Object, _simpleChildCalc);
+            var root = new RootNode(_evaluator.Object, _simpleChildCalc);
 
             root.Add(new MinNode(root));
 
@@ -33,7 +33,7 @@ namespace Tree.Test
         [Test]
         public void ShouldBuildTreeWithThreeChildren()
         {
-            var root = new MaxNode(_evaluator.Object, _simpleChildCalc);
+            var root = new RootNode(_evaluator.Object, _simpleChildCalc);
 
             root.FindBestMove(3);
             root.Children.Should().NotBeNull();
@@ -46,7 +46,7 @@ namespace Tree.Test
         [Test]
         public void ShouldBuildTreeWithNoMoreThanThreeChildren()
         {
-            var root = new MaxNode(_evaluator.Object, _simpleChildCalc);
+            var root = new RootNode(_evaluator.Object, _simpleChildCalc);
 
             root.FindBestMove(3);
             root.Children.Should().NotBeNull();
@@ -59,7 +59,7 @@ namespace Tree.Test
         [Test]
         public void ShouldCreateTheCorrectNumberOfChildren()
         {
-            var root = new MaxNode(new SimpleEvaluator(), _simpleChildCalc, 1);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, 1);
 
             root.FindBestMove(1);
 
@@ -69,7 +69,7 @@ namespace Tree.Test
         [Test]
         public void ShouldHaveChildrenWithTheCorrectScores()
         {
-            var root = new MaxNode(new SimpleEvaluator(), _simpleChildCalc, 1);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, 1);
 
             root.FindBestMove(1);
 
@@ -81,7 +81,7 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithOnePly()
         {
             int depth = 1;
-            var root = new MaxNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
 
             root.FindBestMove(depth);
 
@@ -92,11 +92,22 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithTwoPly()
         {
             int depth = 2;
-            var root = new MaxNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
 
             root.FindBestMove(depth);
 
             root.Score.Should().Be(6);
+        }
+
+        [Test]
+        public void ShouldHaveTheCorrectRootMinMaxValueWithThreePly()
+        {
+            int depth = 3;
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+
+            root.FindBestMove(depth);
+
+            root.Score.Should().Be(20);
         }
     }
 

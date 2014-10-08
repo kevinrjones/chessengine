@@ -20,8 +20,6 @@ namespace Tree
     {
         public Node(IEvaluator evaluator, Func<int> childMoveCalc, int depth = 3) : this()
         {
-            Evaluator = evaluator;
-            MaxDepth = depth;
         }
 
         protected Node()
@@ -29,7 +27,6 @@ namespace Tree
             Children = new List<Node>();            
         }
 
-        public int MaxDepth { get; set; } //?
         public List<Node> Children { get; private set; }
 
         public void Add(Node node)
@@ -38,9 +35,8 @@ namespace Tree
         }
 
         public int Score { get; set; }
-
         public Node Parent { get; set; }
-        public Node Root { get; set; }
+        public RootNode Root { get; set; }
 
         public void FindBestMove(int depth)
         {
@@ -63,10 +59,6 @@ namespace Tree
             
         }
 
-        protected abstract Node CreateChild();
-
-        public Func<int> CalculateNumberOfValidChildMoves = () => 3;
-
         public virtual void Evaluate()
         {
             if (Children.Count == 0)
@@ -79,14 +71,14 @@ namespace Tree
             }
         }
 
+        protected abstract Node CreateChild();
         protected abstract int GetMiniMaxScore();
 
-        protected IEvaluator Evaluator;
     }
 
     public class MinNode : Node
     {
-        public MinNode(Node root)
+        public MinNode(RootNode root)
         {
             Root = root;
             Score = int.MinValue;
@@ -110,18 +102,15 @@ namespace Tree
     }
     public class MaxNode : Node
     {
-        public MaxNode(IEvaluator evaluator, Func<int> childMoveCalc, int depth = 3)
-            : base(evaluator, childMoveCalc, depth)
+        protected MaxNode()
         {
-            Root = this;
-            Score = int.MaxValue;
+            
         }
 
-        internal MaxNode(Node root)
+        internal MaxNode(RootNode root)
         {
             Root = root;
         }
-
 
         protected override Node CreateChild()
         {
@@ -138,5 +127,22 @@ namespace Tree
             });
             return maximum;
         }
+    }
+
+    public class RootNode : MaxNode
+    {
+        internal IEvaluator Evaluator;
+        public Func<int> CalculateNumberOfValidChildMoves = () => 3;
+        public int MaxDepth { get; set; } //?
+
+
+        public RootNode(IEvaluator evaluator, Func<int> childMoveCalc, int depth = 3) 
+        {
+            Root = this;
+            Score = int.MaxValue;
+            Evaluator = evaluator;
+            MaxDepth = depth;
+            CalculateNumberOfValidChildMoves = childMoveCalc;
+        }        
     }
 }
