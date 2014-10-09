@@ -35,6 +35,7 @@ namespace Tree
         internal int Beta = int.MaxValue;
         protected Node Parent { get; set; }
         protected RootNode Root { get; set; }
+        protected int InitialScoreForMiniMax { get; set; }
 
         public void FindBestMove(int depth)
         {
@@ -86,7 +87,17 @@ namespace Tree
 
         protected abstract void TrySetAlphaBeta(int score);
         protected abstract Node CreateChild(int alpha, int beta);
-        protected abstract int GetMiniMaxScore();
+        protected abstract int GetScore(Node child, int score);
+        protected virtual int GetMiniMaxScore()
+        {
+            int score = InitialScoreForMiniMax;
+            Children.ForEach(child =>
+            {
+                score = GetScore(child, score);
+            });
+            TrySetAlphaBeta(score);
+            return score;
+        }
 
     }
 
@@ -97,6 +108,7 @@ namespace Tree
             Root = root;
             Parent = parent;
             Score = int.MinValue;
+            InitialScoreForMiniMax = int.MaxValue;
         }
 
         protected override void TrySetAlphaBeta(int score)
@@ -109,15 +121,9 @@ namespace Tree
             return new MaxNode(Root, this) { Alpha = alpha, Beta = beta };
         }
 
-        protected override int GetMiniMaxScore()
+        protected override int GetScore(Node child, int score)
         {
-            int minimum = int.MaxValue;
-            Children.ForEach(child =>
-            {
-                minimum = child.Score < minimum ? child.Score : minimum;
-            });
-            TrySetAlphaBeta(minimum);
-            return minimum;
+            return child.Score < score ? child.Score : score;
         }
     }
     public class MaxNode : Node
@@ -129,6 +135,7 @@ namespace Tree
             Root = root;
             Parent = parent;
             Score = int.MaxValue;
+            InitialScoreForMiniMax = int.MinValue;
         }
 
         protected override void TrySetAlphaBeta(int score)
@@ -141,15 +148,9 @@ namespace Tree
             return new MinNode(Root, this) { Alpha = alpha, Beta = beta };
         }
 
-        protected override int GetMiniMaxScore()
+        protected override int GetScore(Node child, int score)
         {
-            int maximum = int.MinValue;
-            Children.ForEach(child =>
-            {
-                maximum = child.Score > maximum ? child.Score : maximum;
-            });
-            TrySetAlphaBeta(maximum);
-            return maximum;
+            return child.Score > score ? child.Score : score;
         }
     }
 
