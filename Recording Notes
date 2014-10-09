@@ -1,0 +1,9 @@
+1. MiniMax (At first git checkin)
+
+0. How does minimax work (animation)
+1. Write minimax (with tests)
+2. Add evaluator as a class
+3. Add 'Get child count' as a callback - explain will need a function that calculates moves and gives the best move
+
+
+2. AlphaBeta pruning

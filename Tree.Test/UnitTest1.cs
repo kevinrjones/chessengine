@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -25,7 +23,7 @@ namespace Tree.Test
         {
             var root = new RootNode(_evaluator.Object, _simpleChildCalc);
 
-            root.Add(new MinNode(root));
+            root.Add(new MinNode(root, root));
 
             Assert.AreEqual(1, root.Children.Count);
         }
@@ -103,11 +101,21 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithThreePly()
         {
             int depth = 3;
-            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new AlphaBeta3PlyEvaluator(), _simpleChildCalc, depth);
 
             root.FindBestMove(depth);
 
             root.Score.Should().Be(20);
+        }
+        [Test]
+        public void ShouldHaveTheCorrectRootMinMaxValueWithFourPly()
+        {
+            int depth = 4;
+            var root = new RootNode(new AlphaBeta4PlyEvaluator(), () => 2, depth);
+
+            root.FindBestMove(depth);
+
+            root.Score.Should().Be(3);
         }
     }
 
@@ -117,6 +125,33 @@ namespace Tree.Test
         public int Evaluate()
         {
             return _count++;
+        }
+    }
+
+    class AlphaBeta3PlyEvaluator : IEvaluator
+    {
+        private readonly int[] _values = { 0, 1, 2, 3, 6, 9, 10, 11, 12, 15, 18, 19, 20, 21, 24};
+        private int _count;
+        public int Evaluate()
+        {
+            return _values[_count++];
+        }
+    }
+
+    /*
+     * For testing alpha-beta (see: )
+     * 
+     * Nodes per ply = 2
+     * depth = 4
+     * evals are 3, 17 | 2, 12 | 15, 16 | 25, 0 | 2, 5 | 3, 1 | 2, 14 | 1, 1 
+     */
+    class AlphaBeta4PlyEvaluator : IEvaluator
+    {
+        private readonly int[] _values = { 3, 17, 2, 15, 16, 2, 3 };
+        private int _count;
+        public int Evaluate()
+        {
+            return _values[_count++];
         }
     }
 }
