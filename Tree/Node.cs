@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.Remoting.Messaging;
 
 namespace Tree
 {
@@ -23,22 +20,21 @@ namespace Tree
 
         protected Node()
         {
-            Children = new List<Node>();            
+            Children = new List<Node>();
         }
-
-        public List<Node> Children { get; private set; }
 
         public void Add(Node node)
         {
             Children.Add(node);
         }
 
-        public int Alpha = int.MinValue;
-        public int Beta = int.MaxValue;
-
+        public List<Node> Children { get; private set; }
         public int Score { get; set; }
-        public Node Parent { get; set; }
-        public RootNode Root { get; set; }
+
+        internal int Alpha = int.MinValue;
+        internal int Beta = int.MaxValue;
+        protected Node Parent { get; set; }
+        protected RootNode Root { get; set; }
 
         public void FindBestMove(int depth)
         {
@@ -60,7 +56,7 @@ namespace Tree
             }
             else
             {
-                Evaluate();                
+                Evaluate();
             }
         }
 
@@ -70,7 +66,6 @@ namespace Tree
             {
                 Root.EvaluatedNodes++;
                 Score = Root.Evaluator.Evaluate();
-                Console.WriteLine("Evaluated nodes: {0}, Score: {1}", Root.EvaluatedNodes, Score);
                 TrySetAlphaBeta(Score);
             }
             else
@@ -79,22 +74,20 @@ namespace Tree
             }
         }
 
-        protected abstract void TrySetAlphaBeta(int score);
+        internal void TrySetBeta(int minimum)
+        {
+            Beta = minimum < Beta ? minimum : Beta;
+        }
 
+        internal void TrySetAlpha(int maximum)
+        {
+            Alpha = maximum > Alpha ? maximum : Alpha;
+        }
+
+        protected abstract void TrySetAlphaBeta(int score);
         protected abstract Node CreateChild(int alpha, int beta);
         protected abstract int GetMiniMaxScore();
 
-        public void TrySetBeta(int minimum)
-        {
-            Beta = minimum < Beta ? minimum : Beta;
-            Console.WriteLine("Beta: {0}, Score: {1}", Beta, Score);
-        }
-
-        public void TrySetAlpha(int maximum)
-        {
-            Alpha = maximum > Alpha ? maximum : Alpha;
-            Console.WriteLine("Alpha: {0}, Score: {1}", Alpha, Score);
-        }
     }
 
     public class MinNode : Node
@@ -113,7 +106,6 @@ namespace Tree
 
         protected override Node CreateChild(int alpha, int beta)
         {
-            Console.WriteLine("{2}: Alpha: {0}, Beta: {1}", alpha, beta, "Max");
             return new MaxNode(Root, this) { Alpha = alpha, Beta = beta };
         }
 
@@ -130,10 +122,8 @@ namespace Tree
     }
     public class MaxNode : Node
     {
-        public MaxNode()
-        {
-            
-        }
+        protected MaxNode() { }
+
         internal MaxNode(RootNode root, Node parent)
         {
             Root = root;
@@ -148,7 +138,6 @@ namespace Tree
 
         protected override Node CreateChild(int alpha, int beta)
         {
-            Console.WriteLine("{2}: Alpha: {0}, Beta: {1}", alpha, beta, "Min");
             return new MinNode(Root, this) { Alpha = alpha, Beta = beta };
         }
 
@@ -168,16 +157,13 @@ namespace Tree
     {
         internal IEvaluator Evaluator;
         public Func<int> CalculateNumberOfValidChildMoves = () => 3;
-        public int MaxDepth { get; set; }
         public int EvaluatedNodes { get; set; }
 
-        public RootNode(IEvaluator evaluator, Func<int> childMoveCalc, int depth = 3) 
+        public RootNode(IEvaluator evaluator, Func<int> childMoveCalc)
         {
             Root = this;
-            Score = int.MaxValue;
             Evaluator = evaluator;
-            MaxDepth = depth;
             CalculateNumberOfValidChildMoves = childMoveCalc;
-        }        
+        }
     }
 }

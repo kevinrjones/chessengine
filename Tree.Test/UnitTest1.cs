@@ -57,7 +57,7 @@ namespace Tree.Test
         [Test]
         public void ShouldCreateTheCorrectNumberOfChildren()
         {
-            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, 1);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc);
 
             root.FindBestMove(1);
 
@@ -67,7 +67,7 @@ namespace Tree.Test
         [Test]
         public void ShouldHaveChildrenWithTheCorrectScores()
         {
-            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, 1);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc);
 
             root.FindBestMove(1);
 
@@ -79,7 +79,7 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithOnePly()
         {
             int depth = 1;
-            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc);
 
             root.FindBestMove(depth);
 
@@ -90,7 +90,7 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithTwoPly()
         {
             int depth = 2;
-            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new SimpleEvaluator(), _simpleChildCalc);
 
             root.FindBestMove(depth);
 
@@ -101,7 +101,7 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithThreePly()
         {
             int depth = 3;
-            var root = new RootNode(new AlphaBeta3PlyEvaluator(), _simpleChildCalc, depth);
+            var root = new RootNode(new AlphaBeta3PlyEvaluator(), _simpleChildCalc);
 
             root.FindBestMove(depth);
 
@@ -111,7 +111,7 @@ namespace Tree.Test
         public void ShouldHaveTheCorrectRootMinMaxValueWithFourPly()
         {
             int depth = 4;
-            var root = new RootNode(new AlphaBeta4PlyEvaluator(), () => 2, depth);
+            var root = new RootNode(new AlphaBeta4PlyEvaluator(), () => 2);
 
             root.FindBestMove(depth);
 
