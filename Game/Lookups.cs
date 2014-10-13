@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Game
 {
     public static class Lookups
@@ -32,5 +34,22 @@ namespace Game
                 }
             }
         }
+
+        public static readonly Dictionary<char, Piece> FenPieceLookup = new Dictionary<char, Piece>
+            {
+                {'p', new Pawn{Color = Color.Black}},
+                {'P', new Pawn{Color = Color.White}},
+                {'r', new Rook{Color = Color.Black}},
+                {'R', new Rook{Color = Color.White}},
+                {'n', new Knight{Color = Color.Black}},
+                {'N', new Knight{Color = Color.White}},
+                {'b', new Bishop{Color = Color.Black}},
+                {'B', new Bishop{Color = Color.White}},
+                {'q', new Queen{Color = Color.Black}},
+                {'Q', new Queen{Color = Color.White}},
+                {'k', new King{Color = Color.Black}},
+                {'K', new King{Color = Color.White}},
+            };
+
     }
 }
