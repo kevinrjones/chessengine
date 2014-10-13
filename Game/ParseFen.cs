@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace Game
 {
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     public class ParseFen
     {
         readonly string[] _sections;
@@ -22,7 +23,7 @@ namespace Game
 
         public Piece[] ParseRankAndFile()
         {
-            var squares = ResetBoard();
+            var squares = CreateBoard();
             
             const int ranks = 8;
             for (int rank = 0; rank < ranks; rank++)
@@ -92,7 +93,7 @@ namespace Game
             return _sections[SideToMoveSection] == "w" ? Color.White : Color.Black;
         }
 
-        internal Piece[] ResetBoard()
+        private Piece[] CreateBoard()
         {
             var squares = new Piece[120];
             for (int i = 0; i < squares.Length; i++)

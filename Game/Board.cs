@@ -7,28 +7,23 @@ namespace Game
  
     public class Board
     {
-        //use Secure rand instead
-        private Random random;
-        private readonly int _keyForSide;
-
         public Board()
         {
-            random = new Random();
             Squares = new Piece[120];
             Side = Color.White;
             Material = new int[2];
             CountOfEachPiece = new int[12];
             ActivePieces = new List<Piece>();
-            _keyForSide = random.Next();
-            EnPassantKeys = new int[16];
-            for (int i = 0; i < EnPassantKeys.Length; i++)
-            {
-                EnPassantKeys[i] = random.Next();
-            }
             ResetBoard();
         }
 
-        public int[] EnPassantKeys { get; set; }
+        // todo - do I need this function
+        protected int GeneratePositionKey()
+        {
+            var positionKey = new PositionKey();
+            return positionKey.GeneratePositionKey(Squares, Side, EnPassant, CastlePermission);
+        }
+
         public Piece[] Squares { get; private set; }
         public Color Side { get; set; }
         public int FiftyMove { get; set; }
@@ -39,37 +34,8 @@ namespace Game
         public int[] Material { get; set; }
         public int[] CountOfEachPiece { get; set; }
         public List<Piece> ActivePieces;
-        public int PositionKey { get; set; }
-
-        protected int GeneratePositionKey()
-        {
-            int finalKey = 0;
-            for (int ndxSquares = 0; ndxSquares < Squares.Length; ndxSquares++)
-            {
-                finalKey |= Squares[ndxSquares].PositionKeys[ndxSquares];
-            }
-            if (Side == Color.White)
-            {
-                finalKey |= _keyForSide;
-            }
-            finalKey |= EnPassantKeys[EnPassant];
-            finalKey |= (int)CastlePermission;
-
-            return finalKey;
-        }
 
 
-        /*
-         long LongRandom(long min, long max, Random rand) {
-    byte[] buf = new byte[4];
-    rand.NextBytes(buf);
-    long longRand = BitConverter.ToInt32(buf, 0);
-
-    return (Math.Abs(longRand % (max - min)) + min);
-}
-         */
-
-        // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
         public void ParseFen(string fen)
         {
             ResetBoard();
@@ -123,6 +89,40 @@ namespace Game
         {
             int offset = (gameBoardIndex / 8) * 2;
             return gameBoardIndex + 21 + offset;
+        }
+    }
+
+    public class PositionKey
+    {
+        private readonly int _keyForSide;
+        readonly Random _random = new Random();
+
+        public PositionKey()
+        {
+            _keyForSide = _random.Next();
+        }
+
+        static int[] EnPassantKeys { get; set; }
+        static PositionKey() 
+        {
+             EnPassantKeys = new int[16];            
+        }
+
+        public int GeneratePositionKey(Piece[] squares, Color side, int enPassant, CastlePermissions castlePermission)
+        {
+            int finalKey = 0;
+            for (int ndxSquares = 0; ndxSquares < squares.Length; ndxSquares++)
+            {
+                finalKey |= squares[ndxSquares].PositionKeys[ndxSquares];
+            }
+            if (side == Color.White)
+            {
+                finalKey |= _keyForSide;
+            }
+            finalKey |= EnPassantKeys[enPassant];
+            finalKey |= (int)castlePermission;
+
+            return finalKey;
         }
     }
 }
