@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Game.Test.Board
 {
-    namespace DefaultString
+    namespace Fen.WithDefaultString
     {
         [TestFixture]
         public class ParseFen
@@ -86,7 +86,7 @@ namespace Game.Test.Board
 
     }
 
-    namespace OtherFenString
+    namespace Fen.WithOtherFenString
     {
         [TestFixture]
         public class ParseFen

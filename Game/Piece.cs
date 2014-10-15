@@ -24,7 +24,7 @@ namespace Game
         public bool Slides { get; protected set; }
         public int Value { get; protected set; }
         public int[] PositionKeys { get; set; }
-        protected int[] MoveDirection = new int[1];
+        public static int[] MoveDirection = new int[1];
     }
 
     public class EmptyPiece : Piece

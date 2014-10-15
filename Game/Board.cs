@@ -17,7 +17,7 @@ namespace Game
             ResetBoard();
         }
 
-        // todo - do I need this function
+        // todo - do I need this function - can I use positionKey.GeneratePositionKey directly
         protected int GeneratePositionKey()
         {
             var positionKey = new PositionKey();
@@ -46,6 +46,8 @@ namespace Game
             Side = parseFen.SideToMove(); 
             CastlePermission = parseFen.ParseCastleSection();
             EnPassant = parseFen.ParseEnPassantSection();
+
+            // todo: update material?
         }
 
         internal void ResetBoard()
@@ -89,6 +91,74 @@ namespace Game
         {
             int offset = (gameBoardIndex / 8) * 2;
             return gameBoardIndex + 21 + offset;
+        }
+
+        public bool IsSquareAttacked(int square, Color side)
+        {
+            if (IsAttackedByPawn(square, side)) return true;
+            if (IsAttackedByAKnight(square, side)) return true;
+            if (IsAttackedByAKing(square, side)) return true;            
+            if (IsSquareAttackedByRook(square, side)) return true;
+
+            return false;
+        }
+
+        // todo: generate moves
+
+        private bool IsSquareAttackedByRook(int square, Color side)
+        {
+            foreach (var direction in Rook.MoveDirection)
+            {
+                var testSquare = direction;
+                var piece = Squares[square + testSquare];
+                while (piece.GetType() != typeof (OffBoardPiece))
+                {
+                    if (piece.Color == side && piece.GetType() == typeof (Rook) ||
+                        piece.Color == side && piece.GetType() == typeof (Queen)) return true;
+
+                    testSquare += direction;
+                }
+            }
+            return false;
+        }
+
+        private bool IsAttackedByAKing(int square, Color side)
+        {
+            foreach (var direction in King.MoveDirection)
+            {
+                var piece = Squares[square + direction];
+                if (piece.Color == side && piece.GetType() == typeof(King)) return true;
+            }
+            return false;
+        }
+
+        private bool IsAttackedByAKnight(int square, Color side)
+        {
+            foreach (var direction in Knight.MoveDirection)
+            {
+                var piece = Squares[square + direction];
+                if (piece.Color == side && piece.GetType() == typeof (Knight)) return true;
+            }
+            return false;
+        }
+
+        private bool IsAttackedByPawn(int square, Color side)
+        {
+            if (side == Color.White)
+            {
+                var piece = Squares[square - 11];
+                if (piece.Color == side && piece.GetType() == typeof (Pawn)) return true;
+                piece = Squares[square - 9];
+                if (piece.Color == side && piece.GetType() == typeof (Pawn)) return true;
+            }
+            else
+            {
+                var piece = Squares[square + 11];
+                if (piece.Color == side && piece.GetType() == typeof (Pawn)) return true;
+                piece = Squares[square + 9];
+                if (piece.Color == side && piece.GetType() == typeof (Pawn)) return true;
+            }
+            return false;
         }
     }
 
