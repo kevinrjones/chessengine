@@ -9,27 +9,27 @@ namespace Game.Test.Board
         [Test]
         public void ShouldReturnCorrectIndexWhenFileIsLessThanEight()
         {
-            int result = Game.Board.GameIndexToFullIndex(0);
+            int result = Game.Lookups.Map64To120(0);
             result.Should().Be(21);
-            result = Game.Board.GameIndexToFullIndex(7);
+            result = Game.Lookups.Map64To120(7);
             result.Should().Be(28);
         }
 
         [Test]
         public void ShouldReturnCorrectIndexWhenFileIsGreaterThanSevenAndLessThanSixteen()
         {
-            int result = Game.Board.GameIndexToFullIndex(8);
+            int result = Game.Lookups.Map64To120(8);
             result.Should().Be(31);
-            result = Game.Board.GameIndexToFullIndex(15);
+            result = Game.Lookups.Map64To120(15);
             result.Should().Be(38);
         }
 
         [Test]
         public void ShouldReturnCorrectIndexWhenFileIsGreaterThanTwentyThreeAndLessThanThirtyTwo()
         {
-            int result = Game.Board.GameIndexToFullIndex(24);
+            int result = Game.Lookups.Map64To120(24);
             result.Should().Be(51);
-            result = Game.Board.GameIndexToFullIndex(31);
+            result = Game.Lookups.Map64To120(31);
             result.Should().Be(58);
         }
 

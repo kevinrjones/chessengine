@@ -2,14 +2,28 @@ using System;
 
 namespace Game
 {
+    [Flags]
+    public enum PieceType
+    {
+        OffBoard = -1,
+        Empty = 0,
+        Pawn = 1,
+        Rook = 2,
+        Knight = 4,
+        Bishop = 8,
+        Queen = 16,
+        King = 32,
+    };
     public class Piece
     {
+        public PieceType Type = PieceType.Empty;
+
         private Random random;
         public Piece()
         {
             //use Secure rand instead
             random = new Random();
-            Color = Color.White;
+            Color = Color.Neither;
             Slides = true;
             PositionKeys = new int[120];
             for (var i = 0; i < PositionKeys.Length; i++)
@@ -24,7 +38,7 @@ namespace Game
         public bool Slides { get; protected set; }
         public int Value { get; protected set; }
         public int[] PositionKeys { get; set; }
-        public static int[] MoveDirection = new int[1];
+        public int Square { get; set; }
     }
 
     public class EmptyPiece : Piece
@@ -47,6 +61,7 @@ namespace Game
     {
         public OffBoardPiece()
         {
+            Type = PieceType.OffBoard;
             for (var i = 0; i < PositionKeys.Length; i++)
             {
                 PositionKeys[i] = 0;
@@ -60,14 +75,15 @@ namespace Game
 
     public class King : Piece
     {
+        public static int[] MoveDirection = { -1, -10, 1, 10, 9, -11, 11, 9 };
+
         public King()
         {
+            Type = PieceType.King;
             Big = true;
             Major = true;
             Value = 50000;
-            Slides = false;
-
-            MoveDirection = new[] { -1, -10, 1, 10, 9, -11, 11, 9 };
+            Slides = false;            
         }
         public override string ToString()
         {
@@ -77,12 +93,14 @@ namespace Game
 
     public class Queen : Piece
     {
+        public static int[] MoveDirection = { -1, -10, 1, 10, 9, -11, 11, 9 };
+
         public Queen()
         {
+            Type = PieceType.Queen;
             Big = true;
             Major = true;
-            Value = 1000;
-            MoveDirection = new[] { -1, -10, 1, 10, 9, -11, 11, 9 };
+            Value = 1000;            
         }
         public override string ToString()
         {
@@ -92,12 +110,14 @@ namespace Game
 
     public class Rook : Piece
     {
+        public static int[] MoveDirection =  { -1, -10, 1, 10 };
+
         public Rook()
         {
+            Type = PieceType.Rook;
             Big = true;
             Major = true;
             Value = 550;
-            MoveDirection = new[] { -1, -10, 1, 10 };
         }
         public override string ToString()
         {
@@ -107,12 +127,14 @@ namespace Game
 
     public class Bishop : Piece
     {
+        public static int[] MoveDirection = { 9, -11, 11, 9 };
+
         public Bishop()
         {
+            Type = PieceType.Bishop;
             Big = true;
             Major = false;
-            Value = 325;
-            MoveDirection = new[] { 9, -11, 11, 9 };
+            Value = 325;            
         }
         public override string ToString()
         {
@@ -122,13 +144,15 @@ namespace Game
 
     public class Knight : Piece
     {
+        public static int[] MoveDirection = { -8, -19, -21, -12, 8, 19, 21, 12 };
+
         public Knight()
         {
+            Type = PieceType.Knight;
             Big = true;
             Major = false;
             Value = 325;
-            Slides = false;
-            MoveDirection = new[] { -8, -19, -21, -12, 8, 19, 21, 12 };
+            Slides = false;            
         }
         public override string ToString()
         {
@@ -140,6 +164,7 @@ namespace Game
     {
         public Pawn()
         {
+            Type = PieceType.Pawn;
             Big = false;
             Major = false;
             Value = 100;

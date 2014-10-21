@@ -22,23 +22,23 @@ namespace Game.Test.Board
                 Game.Board board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Squares[Game.Board.FileRankToSquare(0, 0)].Should().BeOfType<Rook>();
-                board.Squares[Game.Board.FileRankToSquare(0, 1)].Should().BeOfType<Pawn>();
-                board.Squares[Game.Board.FileRankToSquare(0, 2)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(0, 3)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(0, 4)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(0, 5)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(0, 6)].Should().BeOfType<Pawn>();
-                board.Squares[Game.Board.FileRankToSquare(0, 7)].Should().BeOfType<Rook>();
+                board.Squares[21].Should().BeOfType<Rook>();
+                board.Squares[31].Should().BeOfType<Pawn>();
+                board.Squares[41].Should().BeOfType<EmptyPiece>();
+                board.Squares[51].Should().BeOfType<EmptyPiece>();
+                board.Squares[61].Should().BeOfType<EmptyPiece>();
+                board.Squares[71].Should().BeOfType<EmptyPiece>();
+                board.Squares[81].Should().BeOfType<Pawn>();
+                board.Squares[91].Should().BeOfType<Rook>();
 
-                board.Squares[Game.Board.FileRankToSquare(7, 0)].Should().BeOfType<Rook>();
-                board.Squares[Game.Board.FileRankToSquare(7, 1)].Should().BeOfType<Pawn>();
-                board.Squares[Game.Board.FileRankToSquare(7, 2)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(7, 3)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(7, 4)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(7, 5)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(7, 6)].Should().BeOfType<Pawn>();
-                board.Squares[Game.Board.FileRankToSquare(7, 7)].Should().BeOfType<Rook>();
+                board.Squares[28].Should().BeOfType<Rook>();
+                board.Squares[38].Should().BeOfType<Pawn>();
+                board.Squares[48].Should().BeOfType<EmptyPiece>();
+                board.Squares[58].Should().BeOfType<EmptyPiece>();
+                board.Squares[68].Should().BeOfType<EmptyPiece>();
+                board.Squares[78].Should().BeOfType<EmptyPiece>();
+                board.Squares[88].Should().BeOfType<Pawn>();
+                board.Squares[98].Should().BeOfType<Rook>();
             }
 
             [Test]
@@ -47,10 +47,10 @@ namespace Game.Test.Board
                 var board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Squares[Game.Board.FileRankToSquare(0, 0)].Color.Should().Be(Color.Black);
-                board.Squares[Game.Board.FileRankToSquare(0, 1)].Color.Should().Be(Color.Black);
-                board.Squares[Game.Board.FileRankToSquare(0, 6)].Color.Should().Be(Color.White);
-                board.Squares[Game.Board.FileRankToSquare(0, 7)].Color.Should().Be(Color.White);
+                board.Squares[21].Color.Should().Be(Color.White);
+                board.Squares[22].Color.Should().Be(Color.White);
+                board.Squares[81].Color.Should().Be(Color.Black);
+                board.Squares[91].Color.Should().Be(Color.Black);
             }
 
             [Test]
@@ -79,7 +79,7 @@ namespace Game.Test.Board
                 var board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.EnPassant.Should().Be(0);
+                board.EnPassantSquare.Should().Be(0);
             }
         }
 
@@ -99,14 +99,14 @@ namespace Game.Test.Board
                 Game.Board board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Squares[Game.Board.FileRankToSquare(0, 0)].Should().BeOfType<Rook>();
-                board.Squares[Game.Board.FileRankToSquare(1, 0)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(2, 0)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(3, 0)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(4, 0)].Should().BeOfType<King>();
-                board.Squares[Game.Board.FileRankToSquare(5, 0)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(6, 0)].Should().BeOfType<EmptyPiece>();
-                board.Squares[Game.Board.FileRankToSquare(7, 0)].Should().BeOfType<Rook>();
+                board.Squares[91].Should().BeOfType<Rook>();
+                board.Squares[92].Should().BeOfType<EmptyPiece>();
+                board.Squares[93].Should().BeOfType<EmptyPiece>();
+                board.Squares[94].Should().BeOfType<EmptyPiece>();
+                board.Squares[95].Should().BeOfType<King>();
+                board.Squares[96].Should().BeOfType<EmptyPiece>();
+                board.Squares[97].Should().BeOfType<EmptyPiece>();
+                board.Squares[98].Should().BeOfType<Rook>();
 
             }
 
@@ -116,10 +116,10 @@ namespace Game.Test.Board
                 var board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Squares[Game.Board.FileRankToSquare(0, 0)].Color.Should().Be(Color.Black);
-                board.Squares[Game.Board.FileRankToSquare(0, 1)].Color.Should().Be(Color.Black);
-                board.Squares[Game.Board.FileRankToSquare(0, 6)].Color.Should().Be(Color.White);
-                board.Squares[Game.Board.FileRankToSquare(0, 7)].Color.Should().Be(Color.White);
+                board.Squares[21].Color.Should().Be(Color.White);
+                board.Squares[22].Color.Should().Be(Color.White);
+                board.Squares[81].Color.Should().Be(Color.Black);
+                board.Squares[82].Color.Should().Be(Color.Black);
             }
 
             [Test]
@@ -148,7 +148,7 @@ namespace Game.Test.Board
                 board.ParseFen(InitialBoardSetup);
 
                 // ep square == e6, from FEN string set above
-                board.EnPassant.Should().Be(75);
+                board.EnPassantSquare.Should().Be(75);
             }
         }
     }
@@ -186,6 +186,270 @@ namespace Game.Test.Board
             board.Squares[88].Should().BeOfType<EmptyPiece>();
             board.Squares[91].Should().BeOfType<EmptyPiece>();
             board.Squares[98].Should().BeOfType<EmptyPiece>();
+        }
+    }
+
+    [TestFixture]
+    public class PieceList
+    {
+        private const string InitialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfPawns()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.PawnPieceList.Count.Should().Be(16);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfQueens()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.QueenPieceList.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfKings()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.KingPieceList.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBishops()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.BishopPieceList.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfKnights()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.KnightPieceList.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfRooks()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetup);
+            b.GeneratePieceList();
+
+            b.RookPieceList.Count.Should().Be(4);
+        }
+    }
+
+    [TestFixture]
+    public class GeneratePawnMoves
+    {
+        [Test]
+        public void ShouldGenerateThirtyTwoInitialMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();            
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(32);
+        }
+
+        [Test]
+        public void ShouldGenerateNoMoveWhenNoMovesAreAvailable()
+        {
+            const string boardSetup = "rnbqkbnr/rnbqkbnr/rnbqkbnr/rnBqKbnr/rnbPkbnr/rnbqkbnr/rnbqkbnr/rnbqkbnr w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(boardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldGenerateFourMovesWhenWhitePawnIsPromoted()
+        {
+            const string boardSetup = "8/rnbPkbnr/8/8/8/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(boardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldGenerateFourMovesWhenBlackPawnIsPromoted()
+        {
+            const string boardSetup = "8/8/8/8/8/8/rrrrrrrp/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(boardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldGenerateTwoMoveWhenOnlyTwoCapturesAreAvailable()
+        {
+            const string boardSetup = "rnbqkbnr/rnbqkbnr/rnbqkbnr/rnbqbbnr/rnbPkbnr/rnbqkbnr/rnbqkbnr/rnbqkbnr w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(boardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+    }
+
+    [TestFixture]
+    public class GenerateRookMoves
+    {
+        [Test]
+        public void ShouldGenerateNoInitialMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldMoveAndCaptureSingleAvailableTarget()
+        {
+            const string initialBoardSetup = "8/8/7P/6qr/7b/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldMoveAndCaptureAllAvailableTargets()
+        {
+            const string initialBoardSetup = "8/8/8/3Q4/2QrQ3/3Q4/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldMoveFromCenterToEdgesOfBoard()
+        {
+            const string initialBoardSetup = "8/8/8/8/3r4/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(14);
+        }
+
+        [Test]
+        public void ShouldGenerateOneMoveIfOneWhiteMoveIsAvailable()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldGenerateSevenMovesIfSevenWhiteMovesAreAvailable()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/7R w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(7);
+        }
+
+        [Test]
+        public void ShouldGenerateFourteenMovesIfFourteenWhiteMovesAreAvailable()
+        {
+            const string initialBoardSetup = "rnbqkbn1/ppppppp1/8/8/8/8/PPPPPPP1/7R w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(14);
+        }
+        [Test]
+        public void ShouldGenerateOneMoveIfOneBlackMoveIsAvailable()
+        {
+            const string initialBoardSetup = "r1bqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldGenerateSevenMovesIfSevenBlackMovesAreAvailable()
+        {
+            const string initialBoardSetup = "r7/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(7);
+        }
+
+        [Test]
+        public void ShouldGenerateFourteenMovesIfFourteenBlackMovesAreAvailable()
+        {
+            const string initialBoardSetup = "r7/1ppppppp/8/8/8/8/1PPPPPPP/1NBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.RookPieceList);
+            board.Moves.Count.Should().Be(14);
+        }
+
+    }
+
+    [TestFixture]
+    public class GenerateKnightMoves
+    {
+        [Test]
+        public void Should()
+        {
+            Assert.False(true);
         }
     }
 }

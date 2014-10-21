@@ -24,12 +24,13 @@ namespace Game
         public Piece[] ParseRankAndFile()
         {
             var squares = CreateBoard();
-            
-            const int ranks = 8;
-            for (int rank = 0; rank < ranks; rank++)
+
+            const int rankSections = 8;
+            int rank = 7;
+            for (int rankSectionNdx = 0; rankSectionNdx < rankSections; rankSectionNdx++)
             {
                 int file = 0;
-                var section = _sections[rank];
+                var section = _sections[rankSectionNdx];
                 foreach (char pieceIdentifier in section)
                 {
                     var countOfPieces = 1;
@@ -42,17 +43,20 @@ namespace Game
                     }
                     else
                     {
-                        piece = Lookups.FenPieceLookup[pieceIdentifier];
+                        piece = Lookups.FenPieceLookup[pieceIdentifier]();
                     }
 
 
                     for (var count = 0; count < countOfPieces; count++)
                     {
-                        int boardNdx = Board.FileRankToSquare(file, rank);
+                        int boardNdx = Lookups.FileRankToSquare(file, rank);
+                        Console.WriteLine(boardNdx);
+                        piece.Square = boardNdx;
                         squares[boardNdx] = piece;
                         file++;
                     }
                 }
+                rank--;
             }
             return squares;
         }
@@ -67,7 +71,7 @@ namespace Game
             int file = section[0] - 'a';
             int rank = section[1] - '1';
 
-            return Board.FileRankToSquare(file, rank);
+            return Lookups.FileRankToSquare(file, rank);
         }
 
         public CastlePermissions ParseCastleSection()
@@ -103,7 +107,7 @@ namespace Game
 
             for (int i = 0; i < 64; i++)
             {
-                squares[Board.GameIndexToFullIndex(i)] = new EmptyPiece();
+                squares[Lookups.Map64To120(i)] = new EmptyPiece();
             }
 
             return squares;
