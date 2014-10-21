@@ -17,7 +17,7 @@ namespace Game
 
             if (_sections.Length != 13)
             {
-                throw new ArgumentException("fen");
+                throw new ArgumentException("FEN must have 13 sections", "fen");
             }
         }
 
@@ -50,13 +50,16 @@ namespace Game
                     for (var count = 0; count < countOfPieces; count++)
                     {
                         int boardNdx = Lookups.FileRankToSquare(file, rank);
-                        Console.WriteLine(boardNdx);
                         piece.Square = boardNdx;
                         squares[boardNdx] = piece;
                         file++;
                     }
                 }
                 rank--;
+                if (file > 8)
+                {
+                    throw new Exception("FEN has found a file larger than eight");
+                }
             }
             return squares;
         }
@@ -66,7 +69,7 @@ namespace Game
             string section = _sections[EnPassantSection];
             if (section == "-") return 0;
 
-            if (section.Length != 2) throw new ArgumentException(section);
+            if (section.Length != 2) throw new Exception("EnPassant section must be two characters in length");
 
             int file = section[0] - 'a';
             int rank = section[1] - '1';

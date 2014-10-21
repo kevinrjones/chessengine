@@ -193,19 +193,19 @@ namespace Game
                         GeneratePawnMoves((Pawn)piece);
                         break;
                     case PieceType.Rook:
-                        GenerateRookMoves((Rook)piece);
+                        GenerateSlidingPieceMoves(piece, Rook.MoveDirection);
                         break;
                     case PieceType.Knight:
-                        GenerateKnightMoves((Knight)piece);
+                        GenerateNonSlidingPieceMoves(piece, Knight.MoveDirection);
                         break;
                     case PieceType.Bishop:
-                        GenerateBishopMoves((Bishop)piece);
+                        GenerateSlidingPieceMoves(piece, Bishop.MoveDirection);
                         break;
                     case PieceType.Queen:
-                        GenerateQueenMoves((Queen)piece);
+                        GenerateSlidingPieceMoves(piece, Queen.MoveDirection);
                         break;
                     case PieceType.King:
-                        GenerateKingMoves((King)piece);
+                        GenerateNonSlidingPieceMoves(piece, King.MoveDirection);
                         break;
                 }
             }
@@ -324,63 +324,52 @@ namespace Game
             }
         }
 
-        private void GenerateKingMoves(King king)
+        private void GenerateSlidingPieceMoves(Piece piece, IEnumerable<int> directions)
         {
-            throw new NotImplementedException();
-        }
-
-        private void GenerateQueenMoves(Queen queen)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void GenerateBishopMoves(Bishop bishop)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void GenerateKnightMoves(Knight knight)
-        {
-            foreach (var direction in Knight.MoveDirection)
+            if (piece.Type != PieceType.Rook && piece.Type != PieceType.Queen && piece.Type != PieceType.Bishop)
             {
-                var piece = Squares[knight.Square + direction];
-                if (piece.Type != PieceType.OffBoard)
-                {
-                    if (piece.Type == PieceType.Empty)
-                    {
-                        AddQuiteMove(piece, knight.Square + direction);
-                    }
-                    if (piece.Color != knight.Color)
-                    {
-                        AddCaptureMove(piece, knight.Square + direction);
-                    }
-                }
-
+                throw new ArgumentException("piece");
             }
-        }
-
-        private void GenerateRookMoves(Rook rook)
-        {
-
-            foreach (var direction in Rook.MoveDirection)
+            foreach (var direction in directions)
             {
-                var testSquare = rook.Square + direction;
-                var piece = Squares[testSquare];
+                var testSquare = piece.Square + direction;
+                var pieceToTest = Squares[testSquare];
 
-                while (piece.Type != PieceType.OffBoard)
+                while (pieceToTest.Type != PieceType.OffBoard)
                 {
-                    if (piece.Color == rook.Color) break;
-                    if (piece.Type == PieceType.Empty)
+                    if (pieceToTest.Color == piece.Color) break;
+                    if (pieceToTest.Type == PieceType.Empty)
                     {
-                        AddQuiteMove(rook, testSquare);
-                    } else if (piece.Color != rook.Color)
+                        AddQuiteMove(piece, testSquare);
+                    }
+                    else if (pieceToTest.Color != piece.Color)
                     {
-                        AddCaptureMove(piece, testSquare);
+                        AddCaptureMove(pieceToTest, testSquare);
                         break;
                     }
                     testSquare += direction;
-                    piece = Squares[testSquare];
+                    pieceToTest = Squares[testSquare];
                 }
+            }
+        }
+
+        private void GenerateNonSlidingPieceMoves(Piece piece, IEnumerable<int> directions )
+        {
+            foreach (var direction in directions)
+            {
+                var pieceToTest = Squares[piece.Square + direction];
+                if (pieceToTest.Type != PieceType.OffBoard)
+                {
+                    if (pieceToTest.Type == PieceType.Empty)
+                    {
+                        AddQuiteMove(pieceToTest, piece.Square + direction);
+                    }
+                    else if (pieceToTest.Color != piece.Color)
+                    {
+                        AddCaptureMove(pieceToTest, piece.Square + direction);
+                    }
+                }
+
             }
         }
 

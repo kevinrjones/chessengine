@@ -75,7 +75,7 @@ namespace Game
 
     public class King : Piece
     {
-        public static int[] MoveDirection = { -1, -10, 1, 10, 9, -11, 11, 9 };
+        public static int[] MoveDirection = { -1, -10, 1, 10, -9, -11, 11, 9 };
 
         public King()
         {
@@ -93,7 +93,7 @@ namespace Game
 
     public class Queen : Piece
     {
-        public static int[] MoveDirection = { -1, -10, 1, 10, 9, -11, 11, 9 };
+        public static int[] MoveDirection = { -1, -10, 1, 10, -9, -11, 11, 9 };
 
         public Queen()
         {
@@ -127,7 +127,7 @@ namespace Game
 
     public class Bishop : Piece
     {
-        public static int[] MoveDirection = { 9, -11, 11, 9 };
+        public static int[] MoveDirection = { -9, -11, 11, 9 };
 
         public Bishop()
         {

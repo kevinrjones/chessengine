@@ -444,12 +444,214 @@ namespace Game.Test.Board
     }
 
     [TestFixture]
+    public class GenerateBishopMoves
+    {
+        [Test]
+        public void ShouldGenerateNoInitialMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.BishopPieceList);
+            board.Moves.Count.Should().Be(0);
+        }
+
+        [Test]        
+        public void ShouldMoveAndCaptureSingleAvailableTarget()
+        {
+            const string initialBoardSetup = "8/8/6P1/7b/6p1/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.BishopPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldMoveAndCaptureAllAvailableTargets()
+        {
+            const string initialBoardSetup = "8/8/8/2P1P3/3b4/2P1P3/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.BishopPieceList);
+            board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]        
+        public void ShouldMoveFromCenterToEdgesOfBoard()
+        {
+            const string initialBoardSetup = "8/8/8/8/3b4/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.BishopPieceList);
+            board.Moves.Count.Should().Be(13);
+        }
+
+        [Test]
+        public void ShouldGenerateOneMoveIfOneWhiteMoveIsAvailable()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/PPPPPPPP/PPPPPP1P/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.BishopPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+    }
+
+    [TestFixture]
     public class GenerateKnightMoves
     {
         [Test]
-        public void Should()
+        public void ShouldHaveEightInitialMoves()
         {
-            Assert.False(true);
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves.Count.Should().Be(8);
+        }
+
+        [Test]
+        public void ShouldHaveEightMovesFromTheMiddleOfTheBoard()
+        {
+            const string initialBoardSetup = "8/8/8/3n4/8/8/8/8 w KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves.Count.Should().Be(8);
+        }
+
+        [Test]
+        public void ShouldHaveEightCaptureMovesFromTheMiddleOfTheBoard()
+        {
+            const string initialBoardSetup = "pppppppp/ppBpBppp/pBpppBpp/3n4/pBpppBpp/ppBpBppp/pppppppp/pppppppp w KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves.Count.Should().Be(8);
+        }
+    }
+
+    [TestFixture]
+    public class GenerateQueenMoves
+    {
+        [Test]
+        public void ShouldGenerateNoInitialMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.QueenPieceList);
+            board.Moves.Count.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldMoveAndCaptureSingleAvailableTarget()
+        {
+            const string initialBoardSetup = "8/8/pppppppP/6rq/bbbbbbbb/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.QueenPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldMoveAndCaptureAllAvailableTargets()
+        {
+            const string initialBoardSetup = "8/8/8/2BBB2/2BqB3/2BBB2/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.QueenPieceList);
+            board.Moves.Count.Should().Be(8);
+        }
+
+        [Test]
+        public void ShouldMoveFromCenterToEdgesOfBoard()
+        {
+            const string initialBoardSetup = "8/8/8/8/3q4/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.QueenPieceList);
+            board.Moves.Count.Should().Be(27);
+        }
+
+        [Test]
+        public void ShouldGenerateOneMoveIfOneWhiteMoveIsAvailable()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ1BNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.QueenPieceList);
+            board.Moves.Count.Should().Be(1);
+        }
+    }
+
+    [TestFixture]
+    public class GenerateKingMoves
+    {
+        [Test]
+        public void ShouldGenerateNoInitialMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldGenerateAllMovesIfAllDirectionsAreAvailable()
+        {
+            const string initialBoardSetup = "8/8/8/3K4/8/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(8);
+        }
+
+        [Test]
+        public void ShouldGenerateAllCaptureMovesIfAllDirectionsAreAvailable()
+        {
+            const string initialBoardSetup = "8/8/pppppppp/pppKpppp/pppppppp/8/8/8 w KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(8);
         }
     }
 }
