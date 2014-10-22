@@ -20,6 +20,7 @@ namespace Game.Test
                 }
 
             }
+
             [Test]
             public void ShouldNotBeAttackedByAnEmptySquareFromTheLeft()
             {
@@ -136,6 +137,39 @@ namespace Game.Test
 
                 }
                 _board.IsSquareAttacked(attackSquare, Color.White).Should().BeFalse();
+            }
+
+            [Test]
+            public void ShouldNotBeAttackedByARookThatIsBehindAPieceOfTheSameColorAsTheSquareUnderAttack()
+            {
+                const int attackSquare = 64;
+                const string initialBoardSetup = "8/3r4/3B4/1rBPBr2/3B4/3r4/8/8 b KQkq - 0 1";
+                _board.ParseFen(initialBoardSetup);
+
+                _board.IsSquareAttacked(attackSquare, Color.Black).Should().BeFalse();
+            }
+
+            [TestCase("8/8/2b5/3P4/8/8/8/8 b KQkq - 0 1")]
+            [TestCase("8/8/4b3/3P4/8/8/8/8 b KQkq - 0 1")]
+            [TestCase("8/8/8/3P4/2b5/8/8/8 b KQkq - 0 1")]
+            [TestCase("8/8/8/3P4/4b3/8/8/8 b KQkq - 0 1")]
+            public void ShouldBeAttackedByABishop(string fen)
+            {
+                const int attackSquare = 64;
+                _board.ParseFen(fen);
+
+                _board.IsSquareAttacked(attackSquare, Color.Black).Should().BeTrue();
+            }
+
+
+            [Test]
+            public void ShouldNotBeAttackedByABishopThatIsBehindAPieceOfTheSameColorAsTheSquareUnderAttack()
+            {
+                const int attackSquare = 64;
+                const string initialBoardSetup = "8/1b3b2/2P1P3/3P4/2P1P3/1b3b2/8/8 b KQkq - 0 1";
+                _board.ParseFen(initialBoardSetup);
+
+                _board.IsSquareAttacked(attackSquare, Color.Black).Should().BeFalse();
             }
         }
     }

@@ -5,6 +5,23 @@ namespace Game
 {
     public static class Lookups
     {
+        public const int A1 = 21;
+        public const int A2 = 22;
+        public const int A3 = 23;
+        public const int A4 = 24;
+        public const int A5 = 25;
+        public const int A6 = 26;
+        public const int A7 = 27;
+        public const int A8 = 28;
+        public const int H1 = 91;
+        public const int H3 = 93;
+        public const int H4 = 94;
+        public const int H5 = 95;
+        public const int H6 = 96;
+        public const int H2 = 92;
+        public const int H7 = 97;
+        public const int H8 = 98;
+
         public const int BoardSize = 120;
         public const int OffBoard = 100;
 
@@ -37,7 +54,7 @@ namespace Game
         }
 
         public static readonly Dictionary<char, Func<Piece>> FenPieceLookup = new Dictionary<char, Func<Piece>>
-            {
+        {
                 {'p', () => new Pawn{Color = Color.Black}},
                 {'P', () => new Pawn{Color = Color.White}},
                 {'r', () => new Rook{Color = Color.Black}},
@@ -51,14 +68,10 @@ namespace Game
                 {'k', () => new King{Color = Color.Black}},
                 {'K', () => new King{Color = Color.White}},
             };
+        
         public static int FileRankToSquare(int file, int rank)
         {
             return ((21 + file) + (rank * 10));
-        }
-
-        public static int Map64To120(int gameBoardIndex)
-        {
-            return Array64To120[gameBoardIndex];
         }
 
         private static readonly int[] Array64To120 = 
@@ -72,6 +85,11 @@ namespace Game
             81, 82, 83, 84, 85, 86, 87, 88,
             91, 92, 93, 94, 95, 96, 97, 98,
         };
+
+        public static int Map64To120(int gameBoardIndex)
+        {
+            return Array64To120[gameBoardIndex];
+        }
 
         private static readonly int[] Array120To64 = 
         {

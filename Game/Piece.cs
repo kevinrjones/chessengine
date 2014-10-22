@@ -53,7 +53,7 @@ namespace Game
 
         public override string ToString()
         {
-            return " ";
+            return ".";
         }
     }
 
@@ -172,5 +172,10 @@ namespace Game
         }
 
         public override bool Minor { get { return false; } }
+        
+        public override string ToString()
+        {
+            return Color == Color.White ? "P" : "p";
+        }
     }
 }

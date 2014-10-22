@@ -59,7 +59,7 @@ namespace Game.Test.Board
                 var board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Side.Should().Be(Color.White);
+                board.SideToMove.Should().Be(Color.White);
             }
 
             [Test]
@@ -128,7 +128,7 @@ namespace Game.Test.Board
                 var board = new Game.Board();
                 board.ParseFen(InitialBoardSetup);
 
-                board.Side.Should().Be(Color.Black);
+                board.SideToMove.Should().Be(Color.Black);
             }
 
             [Test]
@@ -192,66 +192,127 @@ namespace Game.Test.Board
     [TestFixture]
     public class PieceList
     {
-        private const string InitialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        private const string InitialBoardSetupWhiteToMove = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        private const string InitialBoardSetupBlackToMove = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfPawns()
+        public void ShouldContainTheCorrectNumberOfWhitePawns()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.PawnPieceList.Count.Should().Be(16);
+            b.PawnPieceList.Count.Should().Be(8);
         }
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfQueens()
+        public void ShouldContainTheCorrectNumberOfWhiteQueens()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.QueenPieceList.Count.Should().Be(2);
+            b.QueenPieceList.Count.Should().Be(1);
         }
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfKings()
+        public void ShouldContainTheCorrectNumberOfWhiteKings()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.KingPieceList.Count.Should().Be(2);
+            b.KingPieceList.Count.Should().Be(1);
         }
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfBishops()
+        public void ShouldContainTheCorrectNumberOfWhiteBishops()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.BishopPieceList.Count.Should().Be(4);
+            b.BishopPieceList.Count.Should().Be(2);
         }
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfKnights()
+        public void ShouldContainTheCorrectNumberOfWhiteKnights()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.KnightPieceList.Count.Should().Be(4);
+            b.KnightPieceList.Count.Should().Be(2);
         }
 
         [Test]
-        public void ShouldContainTheCorrectNumberOfRooks()
+        public void ShouldContainTheCorrectNumberOfWhiteRooks()
         {
             var b = new Game.Board();
-            b.ParseFen(InitialBoardSetup);
+            b.ParseFen(InitialBoardSetupWhiteToMove);
             b.GeneratePieceList();
 
-            b.RookPieceList.Count.Should().Be(4);
+            b.RookPieceList.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackPawns()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.PawnPieceList.Count.Should().Be(8);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackQueens()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.QueenPieceList.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackKings()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.KingPieceList.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackBishops()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.BishopPieceList.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackKnights()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.KnightPieceList.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldContainTheCorrectNumberOfBlackRooks()
+        {
+            var b = new Game.Board();
+            b.ParseFen(InitialBoardSetupBlackToMove);
+            b.GeneratePieceList();
+
+            b.RookPieceList.Count.Should().Be(2);
         }
     }
 
@@ -259,15 +320,27 @@ namespace Game.Test.Board
     public class GeneratePawnMoves
     {
         [Test]
-        public void ShouldGenerateThirtyTwoInitialMoves()
+        public void ShouldGenerateSixteenInitialWhiteMoves()
         {
             const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-            var board = new Game.Board();            
+            var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
             board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
-            board.Moves.Count.Should().Be(32);
+            board.Moves.Count.Should().Be(16);
+        }
+
+        [Test]
+        public void ShouldGenerateSixteenInitialBlackMoves()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.PawnPieceList);
+            board.Moves.Count.Should().Be(16);
         }
 
         [Test]
@@ -297,7 +370,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateFourMovesWhenBlackPawnIsPromoted()
         {
-            const string boardSetup = "8/8/8/8/8/8/rrrrrrrp/8 w KQkq - 0 1";
+            const string boardSetup = "8/8/8/8/8/8/rrrrrrrp/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(boardSetup);
 
@@ -337,7 +410,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveAndCaptureSingleAvailableTarget()
         {
-            const string initialBoardSetup = "8/8/7P/6qr/7b/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/7P/6qr/7b/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -349,7 +422,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveAndCaptureAllAvailableTargets()
         {
-            const string initialBoardSetup = "8/8/8/3Q4/2QrQ3/3Q4/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/3Q4/2QrQ3/3Q4/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -361,7 +434,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveFromCenterToEdgesOfBoard()
         {
-            const string initialBoardSetup = "8/8/8/8/3r4/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/8/3r4/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -408,7 +481,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateOneMoveIfOneBlackMoveIsAvailable()
         {
-            const string initialBoardSetup = "r1bqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            const string initialBoardSetup = "r1bqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -420,7 +493,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateSevenMovesIfSevenBlackMovesAreAvailable()
         {
-            const string initialBoardSetup = "r7/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            const string initialBoardSetup = "r7/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -432,7 +505,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateFourteenMovesIfFourteenBlackMovesAreAvailable()
         {
-            const string initialBoardSetup = "r7/1ppppppp/8/8/8/8/1PPPPPPP/1NBQKBNR w KQkq - 0 1";
+            const string initialBoardSetup = "r7/1ppppppp/8/8/8/8/1PPPPPPP/1NBQKBNR b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -458,10 +531,10 @@ namespace Game.Test.Board
             board.Moves.Count.Should().Be(0);
         }
 
-        [Test]        
+        [Test]
         public void ShouldMoveAndCaptureSingleAvailableTarget()
         {
-            const string initialBoardSetup = "8/8/6P1/7b/6p1/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/6P1/7b/6p1/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -473,7 +546,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveAndCaptureAllAvailableTargets()
         {
-            const string initialBoardSetup = "8/8/8/2P1P3/3b4/2P1P3/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/2P1P3/3b4/2P1P3/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -482,10 +555,10 @@ namespace Game.Test.Board
             board.Moves.Count.Should().Be(4);
         }
 
-        [Test]        
+        [Test]
         public void ShouldMoveFromCenterToEdgesOfBoard()
         {
-            const string initialBoardSetup = "8/8/8/8/3b4/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/8/3b4/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -512,7 +585,20 @@ namespace Game.Test.Board
     public class GenerateKnightMoves
     {
         [Test]
-        public void ShouldHaveEightInitialMoves()
+        public void ShouldHaveFourInitialMovesForBlack()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldHaveFourInitialMovesForWhite()
         {
             const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -521,13 +607,13 @@ namespace Game.Test.Board
 
             board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
-            board.Moves.Count.Should().Be(8);
+            board.Moves.Count.Should().Be(4);
         }
 
         [Test]
         public void ShouldHaveEightMovesFromTheMiddleOfTheBoard()
         {
-            const string initialBoardSetup = "8/8/8/3n4/8/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/3n4/8/8/8/8 b KQkq - 0 1";
 
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
@@ -540,7 +626,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldHaveEightCaptureMovesFromTheMiddleOfTheBoard()
         {
-            const string initialBoardSetup = "pppppppp/ppBpBppp/pBpppBpp/3n4/pBpppBpp/ppBpBppp/pppppppp/pppppppp w KQkq - 0 1";
+            const string initialBoardSetup = "pppppppp/ppBpBppp/pBpppBpp/3n4/pBpppBpp/ppBpBppp/pppppppp/pppppppp b KQkq - 0 1";
 
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
@@ -557,7 +643,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateNoInitialMoves()
         {
-            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -569,7 +655,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveAndCaptureSingleAvailableTarget()
         {
-            const string initialBoardSetup = "8/8/pppppppP/6rq/bbbbbbbb/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/pppppppP/6rq/bbbbbbbb/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -581,7 +667,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveAndCaptureAllAvailableTargets()
         {
-            const string initialBoardSetup = "8/8/8/2BBB2/2BqB3/2BBB2/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/2BBB2/2BqB3/2BBB2/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -593,7 +679,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldMoveFromCenterToEdgesOfBoard()
         {
-            const string initialBoardSetup = "8/8/8/8/3q4/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/8/3q4/8/8/8 b KQkq - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -633,7 +719,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateAllMovesIfAllDirectionsAreAvailable()
         {
-            const string initialBoardSetup = "8/8/8/3K4/8/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/8/3K4/8/8/8/8 w - - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -645,7 +731,7 @@ namespace Game.Test.Board
         [Test]
         public void ShouldGenerateAllCaptureMovesIfAllDirectionsAreAvailable()
         {
-            const string initialBoardSetup = "8/8/pppppppp/pppKpppp/pppppppp/8/8/8 w KQkq - 0 1";
+            const string initialBoardSetup = "8/8/pppppppp/pppKpppp/pppppppp/8/8/8 w - - 0 1";
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
@@ -653,5 +739,62 @@ namespace Game.Test.Board
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(8);
         }
+
+        [Test]
+        public void ShouldCastleQueenSideWhenWhiteToMove()
+        {
+            const string initialBoardSetup = "rnbkbnr/pppppppp/8/8/8/8/PPPPPPPP/R3KBNR w KQkq - 0 1";
+            var board = new Game.Board();
+            board.CastlePermission = CastlePermissions.WhiteKing | CastlePermissions.WhiteQueen |
+                                     CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldCastleKingSideWhenWhiteToMove()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RBNQK2R w KQkq - 0 1";
+            var board = new Game.Board();
+            board.CastlePermission = CastlePermissions.WhiteKing | CastlePermissions.WhiteQueen |
+                                     CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldCastleQueenSideWhenBlackToMove()
+        {
+            const string initialBoardSetup = "r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+            var board = new Game.Board();
+            board.CastlePermission = CastlePermissions.WhiteKing | CastlePermissions.WhiteQueen |
+                                     CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldCastleKingSideWhenBlackToMove()
+        {
+            const string initialBoardSetup = "rnbqk2r/pppppppp/8/8/8/8/PPPPPPPP/RBNQKBNR b KQkq - 0 1";
+            var board = new Game.Board();
+            board.CastlePermission = CastlePermissions.WhiteKing | CastlePermissions.WhiteQueen |
+                                     CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KingPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+
     }
 }

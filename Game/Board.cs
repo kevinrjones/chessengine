@@ -3,45 +3,12 @@ using System.Collections.Generic;
 
 namespace Game
 {
-    public class ZobristHashing
-    {
-        public Random random { get; private set; }
-
-        public ZobristHashing()
-        {
-            random = new Random(101010);
-        }
-    }
-
-    public class Move
-    {
-        public int FromSquare { get { return Piece.Square; } }
-        internal int ToSquare;
-        internal Piece PromotedTo;
-        internal Piece Piece;
-
-        public Move(Piece piece, int toSquare)
-        {
-            ToSquare = toSquare;
-            Piece = piece;
-        }
-
-        public Move(Piece piece, int toSquare, Piece promotedTo)
-        {
-            ToSquare = toSquare;
-            PromotedTo = promotedTo;
-            PromotedTo.Color = piece.Color;
-            PromotedTo.Square = piece.Square;
-            Piece = piece;
-        }
-    }
-
     public class Board
     {
         public Board()
         {
             Squares = new Piece[120];
-            Side = Color.White;
+            SideToMove = Color.White;
             Material = new int[2];
             CountOfEachPiece = new int[12];
             ActivePieces = new List<Piece>();
@@ -52,11 +19,11 @@ namespace Game
         protected int GeneratePositionKey()
         {
             var positionKey = new PositionKey();
-            return positionKey.GeneratePositionKey(Squares, Side, EnPassantSquare, CastlePermission);
+            return positionKey.GeneratePositionKey(Squares, SideToMove, EnPassantSquare, CastlePermission);
         }
 
         public Piece[] Squares { get; private set; }
-        public Color Side { get; set; }
+        public Color SideToMove { get; set; }
         public int FiftyMove { get; set; }
         public int HistoryPly { get; set; }
         public int Ply { get; set; }
@@ -74,7 +41,7 @@ namespace Game
             var parseFen = new ParseFen(fen);
 
             Squares = parseFen.ParseRankAndFile();
-            Side = parseFen.SideToMove();
+            SideToMove = parseFen.SideToMove();
             CastlePermission = parseFen.ParseCastleSection();
             EnPassantSquare = parseFen.ParseEnPassantSection();
 
@@ -116,7 +83,7 @@ namespace Game
                 CountOfEachPiece[i] = 0;
             }
 
-            Side = Color.Neither;
+            SideToMove = Color.Neither;
 
             FiftyMove = 0;
             HistoryPly = 0;
@@ -131,7 +98,8 @@ namespace Game
             if (IsAttackedByPawn(square, side)) return true;
             if (IsAttackedByAKnight(square, side)) return true;
             if (IsAttackedByAKing(square, side)) return true;
-            if (IsSquareAttackedByRook(square, side)) return true;
+            if (IsSquareAttackedByARook(square, side)) return true;
+            if (IsSquareAttackedByABishop(square, side)) return true;
 
             return false;
         }
@@ -155,30 +123,33 @@ namespace Game
             for (var square = 0; square < Squares.Length; square++)
             {
                 var piece = Squares[square];
-                switch (piece.Type)
+                if (piece.Type == PieceType.Empty)
                 {
-                    case PieceType.Pawn:
-                        PawnPieceList.Add((Pawn)piece);
-                        break;
-                    case PieceType.Rook:
-                        RookPieceList.Add((Rook)piece);
-                        break;
-                    case PieceType.Knight:
-                        KnightPieceList.Add((Knight)piece);
-                        break;
-                    case PieceType.Bishop:
-                        BishopPieceList.Add((Bishop)piece);
-                        break;
-                    case PieceType.Queen:
-                        QueenPieceList.Add((Queen)piece);
-                        break;
-                    case PieceType.King:
-                        KingPieceList.Add((King)piece);
-                        break;
-                    case PieceType.Empty:
-                        // FullIndexToGameIndex
-                        EmptySquares[square] = true;
-                        break;
+                    EmptySquares[square] = true;
+                }
+                else if (piece.Color == SideToMove)
+                {
+                    switch (piece.Type)
+                    {
+                        case PieceType.Pawn:
+                            PawnPieceList.Add((Pawn)piece);
+                            break;
+                        case PieceType.Rook:
+                            RookPieceList.Add((Rook)piece);
+                            break;
+                        case PieceType.Knight:
+                            KnightPieceList.Add((Knight)piece);
+                            break;
+                        case PieceType.Bishop:
+                            BishopPieceList.Add((Bishop)piece);
+                            break;
+                        case PieceType.Queen:
+                            QueenPieceList.Add((Queen)piece);
+                            break;
+                        case PieceType.King:
+                            KingPieceList.Add((King)piece);
+                            break;
+                    }
                 }
             }
         }
@@ -303,7 +274,7 @@ namespace Game
 
         private void AddPawnMove(Pawn pawn, int to)
         {
-            if (pawn.Color == Color.White && to >= 91 && to <= 98)
+            if (pawn.Color == Color.White && to >= Lookups.H1 && to <= Lookups.H8)
             {
                 // promoted
                 Moves.Add(new Move(pawn, to, new Queen()));
@@ -311,7 +282,7 @@ namespace Game
                 Moves.Add(new Move(pawn, to, new Bishop()));
                 Moves.Add(new Move(pawn, to, new Knight()));
             }
-            else if (pawn.Color == Color.Black && to >= 21 && to <= 28)
+            else if (pawn.Color == Color.Black && to >= Lookups.A1 && to <= Lookups.A8)
             {
                 Moves.Add(new Move(pawn, to, new Queen()));
                 Moves.Add(new Move(pawn, to, new Rook()));
@@ -353,7 +324,7 @@ namespace Game
             }
         }
 
-        private void GenerateNonSlidingPieceMoves(Piece piece, IEnumerable<int> directions )
+        private void GenerateNonSlidingPieceMoves(Piece piece, IEnumerable<int> directions)
         {
             foreach (var direction in directions)
             {
@@ -369,17 +340,88 @@ namespace Game
                         AddCaptureMove(pieceToTest, piece.Square + direction);
                     }
                 }
-
+            }
+            if (piece.Type == PieceType.King)
+            {
+                GenerateCastlingMoves((King)piece);
             }
         }
 
-        private bool IsSquareAttackedByRook(int square, Color side)
+        private void GenerateCastlingMoves(King king)
         {
+            if (king.Color == Color.White)
+            {
+                if (CanCastle(CastlePermissions.WhiteQueen, new[] { Lookups.A2, Lookups.A3, Lookups.A4 }, Color.Black))
+                {
+                    AddCastleMove(king, CastlePermissions.WhiteQueen);
+                }
+
+                if (CanCastle(CastlePermissions.WhiteKing, new[] { Lookups.A6, Lookups.A7 }, Color.Black))
+                {
+                    AddCastleMove(king, CastlePermissions.WhiteKing);
+                }
+            }
+            else
+            {
+                if (CanCastle(CastlePermissions.BlackQueen, new[] { Lookups.H2, Lookups.H3, Lookups.H4 }, Color.White))
+                {
+                    AddCastleMove(king, CastlePermissions.BlackQueen);
+                }
+
+                if (CanCastle(CastlePermissions.BlackKing, new[] { Lookups.H6, Lookups.H7 }, Color.White))
+                {
+                    AddCastleMove(king, CastlePermissions.BlackKing);
+                }
+            }
+        }
+
+        private bool CanCastle(CastlePermissions permission, IEnumerable<int> squaresToCheck, Color colorToCheck)
+        {
+            var canCastle = false;
+            if ((CastlePermission & permission) > 0)
+            {
+                canCastle = true;
+                foreach (var ndx in squaresToCheck)
+                {
+                    if (Squares[ndx].Type != PieceType.Empty || IsSquareAttacked(ndx, colorToCheck))
+                    {
+                        canCastle = false;
+                    }
+                }
+            }
+            return canCastle;
+        }
+
+        private void AddCastleMove(King king, CastlePermissions castlePermissions)
+        {
+            int toSquare = 0;
+            if (castlePermissions == CastlePermissions.WhiteQueen)
+            {
+                toSquare = Lookups.A2;
+            }
+            if (castlePermissions == CastlePermissions.WhiteKing)
+            {
+                toSquare = Lookups.A7;
+            }
+            if (castlePermissions == CastlePermissions.BlackQueen)
+            {
+                toSquare = Lookups.H2;
+            }
+            if (castlePermissions == CastlePermissions.BlackKing)
+            {
+                toSquare = Lookups.H7;
+            }
+            Moves.Add(new Move(king, toSquare, castlePermissions));
+        }
+
+        private bool IsSquareAttackedByARook(int square, Color side)
+        {
+            var thisSideColor = side == Color.White ? Color.Black : Color.White;
             foreach (var direction in Rook.MoveDirection)
             {
                 var testSquare = direction;
                 var piece = Squares[square + testSquare];
-                while (piece.Type != PieceType.OffBoard)
+                while (IsValidAttackingPiece(piece, thisSideColor))
                 {
                     if (piece.Color == side && piece.Type == PieceType.Rook ||
                         piece.Color == side && piece.Type == PieceType.Queen) return true;
@@ -389,6 +431,30 @@ namespace Game
                 }
             }
             return false;
+        }
+
+        private bool IsSquareAttackedByABishop(int square, Color side)
+        {
+            var thisSideColor = side == Color.White ? Color.Black : Color.White;
+            foreach (var direction in Bishop.MoveDirection)
+            {
+                var testSquare = direction;
+                var piece = Squares[square + testSquare];
+                while (IsValidAttackingPiece(piece, thisSideColor))
+                {
+                    if (piece.Color == side && piece.Type == PieceType.Bishop ||
+                        piece.Color == side && piece.Type == PieceType.Queen) return true;
+
+                    testSquare += direction;
+                    piece = Squares[square + testSquare];
+                }
+            }
+            return false;
+        }
+
+        private static bool IsValidAttackingPiece(Piece piece, Color thisSideColor)
+        {
+            return piece.Type != PieceType.OffBoard && thisSideColor != piece.Color;
         }
 
         private bool IsAttackedByAKing(int square, Color side)
