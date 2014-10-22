@@ -36,22 +36,25 @@ namespace Game
                     var countOfPieces = 1;
 
                     Piece piece;
-                    if (pieceIdentifier >= '0' && pieceIdentifier <= '8')
+                    int boardNdx = Lookups.FileRankToSquare(file, rank);
+                    if (pieceIdentifier >= '1' && pieceIdentifier <= '8')
                     {
                         int.TryParse(pieceIdentifier.ToString(CultureInfo.CurrentCulture), out countOfPieces);
-                        piece = new EmptyPiece();
+                        piece = new EmptyPiece{Square = boardNdx};
                     }
                     else
                     {
                         piece = Lookups.FenPieceLookup[pieceIdentifier]();
+                        piece.Square = boardNdx;
                     }
 
+                    squares[boardNdx] = piece;
+                    file++;
 
-                    for (var count = 0; count < countOfPieces; count++)
+                    for (var count = 1; count < countOfPieces; count++)
                     {
-                        int boardNdx = Lookups.FileRankToSquare(file, rank);
-                        piece.Square = boardNdx;
-                        squares[boardNdx] = piece;
+                        boardNdx = Lookups.FileRankToSquare(file, rank);
+                        squares[boardNdx]= new EmptyPiece {Square = boardNdx};                         
                         file++;
                     }
                 }

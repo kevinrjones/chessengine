@@ -14,22 +14,15 @@ namespace Game
         Queen = 16,
         King = 32,
     };
+
     public class Piece
     {
         public PieceType Type = PieceType.Empty;
 
-        private Random random;
         public Piece()
         {
-            //use Secure rand instead
-            random = new Random();
             Color = Color.Neither;
             Slides = true;
-            PositionKeys = new int[120];
-            for (var i = 0; i < PositionKeys.Length; i++)
-            {
-                PositionKeys[i] = random.Next();
-            }
         }
         public bool Big { get; protected set; }
         public bool Major { get; protected set; }
@@ -37,7 +30,6 @@ namespace Game
         public Color Color { get; set; }
         public bool Slides { get; protected set; }
         public int Value { get; protected set; }
-        public int[] PositionKeys { get; set; }
         public int Square { get; set; }
     }
 
@@ -45,10 +37,6 @@ namespace Game
     {
         public EmptyPiece()
         {
-            for (var i = 0; i < PositionKeys.Length; i++)
-            {
-                PositionKeys[i] = 0;
-            }
         }
 
         public override string ToString()
@@ -62,10 +50,6 @@ namespace Game
         public OffBoardPiece()
         {
             Type = PieceType.OffBoard;
-            for (var i = 0; i < PositionKeys.Length; i++)
-            {
-                PositionKeys[i] = 0;
-            }
         }
         public override string ToString()
         {
@@ -83,7 +67,7 @@ namespace Game
             Big = true;
             Major = true;
             Value = 50000;
-            Slides = false;            
+            Slides = false;
         }
         public override string ToString()
         {
@@ -100,7 +84,7 @@ namespace Game
             Type = PieceType.Queen;
             Big = true;
             Major = true;
-            Value = 1000;            
+            Value = 1000;
         }
         public override string ToString()
         {
@@ -110,7 +94,7 @@ namespace Game
 
     public class Rook : Piece
     {
-        public static int[] MoveDirection =  { -1, -10, 1, 10 };
+        public static int[] MoveDirection = { -1, -10, 1, 10 };
 
         public Rook()
         {
@@ -134,7 +118,7 @@ namespace Game
             Type = PieceType.Bishop;
             Big = true;
             Major = false;
-            Value = 325;            
+            Value = 325;
         }
         public override string ToString()
         {
@@ -152,7 +136,7 @@ namespace Game
             Big = true;
             Major = false;
             Value = 325;
-            Slides = false;            
+            Slides = false;
         }
         public override string ToString()
         {
@@ -172,7 +156,7 @@ namespace Game
         }
 
         public override bool Minor { get { return false; } }
-        
+
         public override string ToString()
         {
             return Color == Color.White ? "P" : "p";

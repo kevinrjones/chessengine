@@ -29,5 +29,16 @@ namespace Game
             ToSquare = toSquare;
             CastlePermission = castlePermission;
         }
+
+        public override string ToString()
+        {
+            var move = Lookups.MapSquareToRankFile(PieceToMove.Square) + Lookups.MapSquareToRankFile(ToSquare);
+            if (PromotedTo != null)
+            {
+                move += PromotedTo.ToString();
+            }
+
+            return move + " (" + PieceToMove.Square + " to " + ToSquare + ")";
+        }
     }
 }

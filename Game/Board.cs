@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Game
 {
@@ -33,6 +34,21 @@ namespace Game
         public int[] CountOfEachPiece { get; set; }
         public List<Piece> ActivePieces;
 
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            for (int rank = 7; rank >= 0; rank--)
+            {
+                for (int file = 0; file < 7; file++)
+                {
+                    int boardNdx = Lookups.FileRankToSquare(file, rank);
+                    var piece = Squares[boardNdx];
+                    builder.Append(piece);
+                }
+                builder.Append(Environment.NewLine);
+            }
+            return builder.ToString();
+        }
 
         public void ParseFen(string fen)
         {
@@ -112,7 +128,7 @@ namespace Game
         internal readonly List<King> KingPieceList = new List<King>(2);
         internal readonly bool[] EmptySquares = new bool[120];
 
-        internal List<Move> Moves = new List<Move>();
+        public List<Move> Moves = new List<Move>();
         public void GeneratePieceList()
         {
             for (int i = 0; i < EmptySquares.Length; i++)
@@ -315,7 +331,7 @@ namespace Game
                     }
                     else if (pieceToTest.Color != piece.Color)
                     {
-                        AddCaptureMove(pieceToTest, testSquare);
+                        AddCaptureMove(piece, testSquare);
                         break;
                     }
                     testSquare += direction;
@@ -333,11 +349,11 @@ namespace Game
                 {
                     if (pieceToTest.Type == PieceType.Empty)
                     {
-                        AddQuiteMove(pieceToTest, piece.Square + direction);
+                        AddQuiteMove(piece, piece.Square + direction);
                     }
                     else if (pieceToTest.Color != piece.Color)
                     {
-                        AddCaptureMove(pieceToTest, piece.Square + direction);
+                        AddCaptureMove(piece, piece.Square + direction);
                     }
                 }
             }
@@ -495,6 +511,16 @@ namespace Game
             }
             return false;
         }
+
+        public void GenerateMoves()
+        {
+            GenerateMoves(PawnPieceList);
+            GenerateMoves(KnightPieceList);
+            GenerateMoves(BishopPieceList);
+            GenerateMoves(RookPieceList);
+            GenerateMoves(QueenPieceList);
+            GenerateMoves(KingPieceList);
+        }
     }
 
     public class PositionKey
@@ -518,7 +544,8 @@ namespace Game
             int finalKey = 0;
             for (int ndxSquares = 0; ndxSquares < squares.Length; ndxSquares++)
             {
-                finalKey |= squares[ndxSquares].PositionKeys[ndxSquares];
+                // todo: position keys
+                //finalKey |= squares[ndxSquares].PositionKeys[ndxSquares];
             }
             if (side == Color.White)
             {

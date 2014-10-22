@@ -42,6 +42,31 @@ namespace Game.Test.Board
             }
 
             [Test]
+            public void ShouldHavePiecesWithCorrectSquares()
+            {
+                var board = new Game.Board();
+                board.ParseFen(InitialBoardSetup);
+
+                var squares = new[]
+                {
+                    21, 22, 23, 24, 25, 26, 27, 28,
+                    31, 32, 33, 34, 35, 36, 37, 38,
+                    41, 42, 43, 44, 45, 46, 47, 48,
+                    51, 52, 53, 54, 55, 56, 57, 58,
+                    61, 62, 63, 64, 65, 66, 67, 68,
+                    71, 72, 73, 74, 75, 76, 77, 78,
+                    81, 82, 83, 84, 85, 86, 87, 88,
+                    91, 92, 93, 94, 95, 96, 97, 98,
+                };
+
+                foreach (var square in squares)
+                {
+                    board.Squares[square].Square.Should().Be(square);
+                }
+            }
+
+
+            [Test]
             public void ShouldCreateCorrectlyColoredPieces()
             {
                 var board = new Game.Board();
@@ -595,6 +620,49 @@ namespace Game.Test.Board
             board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(4);
+        }
+
+        [Test]
+        public void ShouldHaveTwoMovesForBlackKnightOnTheFirstRank()
+        {
+            const string initialBoardSetup = "rn6/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void ShouldHaveTwoMovesForBlackKnightOnTheFirstRankToTheCorrectSquares()
+        {
+            const string initialBoardSetup = "rn6/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves[0].PieceToMove.Square.Should().Be(92);
+            board.Moves[1].PieceToMove.Square.Should().Be(92);
+        }
+
+
+        [Test]
+        public void ShouldHaveFourInitialMovesForBlackToTheCorrectSquares()
+        {
+            const string initialBoardSetup = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1";
+
+            var board = new Game.Board();
+            board.ParseFen(initialBoardSetup);
+
+            board.GeneratePieceList();
+            board.GenerateMoves(board.KnightPieceList);
+            board.Moves[0].PieceToMove.Square.Should().Be(92);
+            board.Moves[0].ToSquare.Should().Be(73);
+            board.Moves[1].ToSquare.Should().Be(71);
         }
 
         [Test]
