@@ -13,6 +13,7 @@ namespace ChessConsole
         {
             Board board = new Board();
             board.ParseFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Console.WriteLine("0x{0:x8}", board.PositionKey);
             board.GeneratePieceList();
             board.GenerateMoves();
             Console.WriteLine(board);

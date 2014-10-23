@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="GameIndexToFullIndex.cs" />
+    <Compile Include="HashPiece.cs" />
     <Compile Include="IsSquareAttacked.cs" />
     <Compile Include="Lookups.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

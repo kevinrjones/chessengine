@@ -7,6 +7,9 @@ namespace Game
         internal int ToSquare;
         internal Piece PromotedTo;
         internal Piece PieceToMove;
+        // todo
+        internal bool IsPawnStartMove;
+        internal Piece Captured;
 
         public Move(Piece piece, int toSquare)
         {

@@ -133,5 +133,6 @@ namespace Game
             return SquareToRankFile[fullIndex];
         }
 
+        public const int Maxmoves = 2048;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Game
@@ -8,7 +9,8 @@ namespace Game
     {
         public Board()
         {
-            Squares = new Piece[120];
+            Squares = new Piece[Lookups.BoardSize];
+            History = new List<History>(Lookups.Maxmoves);
             SideToMove = Color.White;
             Material = new int[2];
             CountOfEachPiece = new int[12];
@@ -16,11 +18,181 @@ namespace Game
             ResetBoard();
         }
 
-        // todo - do I need this function - can I use positionKey.GeneratePositionKey directly
+        private readonly ZobristHashing _hashing = new ZobristHashing();
+        public int PositionKey;
+        
         protected int GeneratePositionKey()
         {
-            var positionKey = new PositionKey();
-            return positionKey.GeneratePositionKey(Squares, SideToMove, EnPassantSquare, CastlePermission);
+            int finalKey = 0;
+            for (int i = 0; i < Squares.Length; i++)
+            {
+                if (Squares[i].Type != PieceType.OffBoard && Squares[i].Type != PieceType.Empty)
+                {
+                    finalKey ^= _hashing.GetKeyForPiece(Squares[i]);
+                }
+            }
+
+            if (SideToMove == Color.White)
+            {
+                finalKey ^= _hashing.GetSideKey();
+            }
+
+            if (EnPassantSquare != 0)
+            {
+                finalKey ^= _hashing.GetEnPassantKey(EnPassantSquare);
+            }
+
+            finalKey ^= _hashing.GetCastleKey(CastlePermission);
+
+            return finalKey;
+        }
+
+        internal void HashPiece(Piece piece)
+        {
+            PositionKey ^= _hashing.GetKeyForPiece(piece);
+        }
+
+        internal void HashCastle()
+        {
+            PositionKey ^= _hashing.GetCastleKey(CastlePermission);
+        }
+
+        internal void HashSide()
+        {
+            PositionKey ^= _hashing.GetSideKey();
+        }
+
+        internal void HashEnPassant(int square)
+        {
+            PositionKey ^= _hashing.GetEnPassantKey(square);
+        }
+
+        internal void ClearPiece(Piece piece)
+        {
+            // hash piece out
+            HashPiece(piece);
+            // set square to empty
+            Squares[piece.Square] = new EmptyPiece{Square = piece.Square};
+            // update the material            
+            Material[(int) SideToMove] -= piece.Value;
+            // update the piece list for this piece
+            RemovePieceFromPieceList(piece);
+        }
+
+        internal void AddPiece(Piece piece)
+        {            
+            // hash piece
+            HashPiece(piece);
+            // add piece to board
+            Squares[piece.Square] = piece;
+            // update material
+            Material[(int)SideToMove] += piece.Value;
+            // update piece list
+            AddPieceFromToList(piece);
+        }
+
+        internal void MovePiece(Piece from, Piece to)
+        {
+            // hash piece out
+            HashPiece(from);
+            // set square to empty            
+            Squares[from.Square] = new EmptyPiece { Square = from.Square };
+            // add piece to board
+            Squares[to.Square] = to;
+            // update the piece list            
+            RemovePieceFromPieceList(from);
+            AddPieceFromToList(to);
+        }
+
+        internal void MakeMove(Move move)
+        {
+            // video 36
+            // CastlePerms array
+
+            // store current side so we can check king attack later
+            // add poskey to history array
+            // check enpas capture - if so then remove pawn one rank up ClearPiece(to +- 10)
+            // check castle move - king has moved, now move rook. Switch on 'to' square and move rook calling MovePiece(to, from) for rook
+            // if enpas is set, hash it out
+            // add other bits to the game board history (move, fifty, enpas, castle perms)
+            // update castle perms using from and to square pieces
+            // hash in castle perms
+            // is it a captured piece
+            //    ClearPiece(to)
+            //    reset fifty move count
+            // update hisply
+            // update game ply
+            // if pawn move
+            //    reset 50 move
+            //    if pawn start
+            //      set enpas square (for white or black)
+            //      hash enpas square
+            // Move(from, to)
+            // if promoted
+            //    Clear old piece
+            //    Add new piece
+            // Switch side
+            // hash side
+            // if kingisincheck
+            //    TakeMove (take back the move)
+            // return !(king is in check)
+            
+        }
+
+        private void RemovePieceFromPieceList(Piece piece)
+        {
+            switch (piece.Type)
+            {
+                case PieceType.Pawn:
+                    Piece pieceToRemove = PawnPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    PawnPieceList.Remove((Pawn)pieceToRemove);
+                    break;
+                case PieceType.Rook:
+                    pieceToRemove = RookPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    RookPieceList.Remove((Rook)pieceToRemove);
+                    break;
+                case PieceType.Knight:
+                    pieceToRemove = KnightPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    KnightPieceList.Remove((Knight)pieceToRemove);
+                    break;
+                case PieceType.Bishop:
+                    pieceToRemove = BishopPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    BishopPieceList.Remove((Bishop)pieceToRemove);
+                    break;
+                case PieceType.Queen:
+                    pieceToRemove = QueenPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    QueenPieceList.Remove((Queen)pieceToRemove);
+                    break;
+                case PieceType.King:
+                    pieceToRemove = KingPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    KingPieceList.Remove((King)pieceToRemove);
+                    break;
+            }
+        }
+
+        private void AddPieceFromToList(Piece piece)
+        {
+            switch (piece.Type)
+            {
+                case PieceType.Pawn:
+                    PawnPieceList.Add((Pawn)piece);
+                    break;
+                case PieceType.Rook:
+                    RookPieceList.Add((Rook)piece);
+                    break;
+                case PieceType.Knight:
+                    KnightPieceList.Add((Knight)piece);
+                    break;
+                case PieceType.Bishop:
+                    BishopPieceList.Add((Bishop)piece);
+                    break;
+                case PieceType.Queen:
+                    QueenPieceList.Add((Queen)piece);
+                    break;
+                case PieceType.King:
+                    KingPieceList.Add((King)piece);
+                    break;
+            }
         }
 
         public Piece[] Squares { get; private set; }
@@ -28,6 +200,7 @@ namespace Game
         public int FiftyMove { get; set; }
         public int HistoryPly { get; set; }
         public int Ply { get; set; }
+        public List<History> History; 
         public int EnPassantSquare { get; set; }
         public CastlePermissions CastlePermission { get; set; }
         public int[] Material { get; set; }
@@ -62,6 +235,8 @@ namespace Game
             EnPassantSquare = parseFen.ParseEnPassantSection();
 
             UpdateMaterial();
+
+            PositionKey = GeneratePositionKey();
         }
 
         private void UpdateMaterial()
@@ -72,7 +247,7 @@ namespace Game
                 var piece = Squares[sq];
                 if (piece.Type != PieceType.Empty)
                 {
-                    Material[(int)piece.Color] += piece.Value;
+                    Material[(int) piece.Color] += piece.Value;
                 }
             }
         }
@@ -129,6 +304,7 @@ namespace Game
         internal readonly bool[] EmptySquares = new bool[120];
 
         public List<Move> Moves = new List<Move>();
+
         public void GeneratePieceList()
         {
             for (int i = 0; i < EmptySquares.Length; i++)
@@ -148,22 +324,22 @@ namespace Game
                     switch (piece.Type)
                     {
                         case PieceType.Pawn:
-                            PawnPieceList.Add((Pawn)piece);
+                            PawnPieceList.Add((Pawn) piece);
                             break;
                         case PieceType.Rook:
-                            RookPieceList.Add((Rook)piece);
+                            RookPieceList.Add((Rook) piece);
                             break;
                         case PieceType.Knight:
-                            KnightPieceList.Add((Knight)piece);
+                            KnightPieceList.Add((Knight) piece);
                             break;
                         case PieceType.Bishop:
-                            BishopPieceList.Add((Bishop)piece);
+                            BishopPieceList.Add((Bishop) piece);
                             break;
                         case PieceType.Queen:
-                            QueenPieceList.Add((Queen)piece);
+                            QueenPieceList.Add((Queen) piece);
                             break;
                         case PieceType.King:
-                            KingPieceList.Add((King)piece);
+                            KingPieceList.Add((King) piece);
                             break;
                     }
                 }
@@ -177,7 +353,7 @@ namespace Game
                 switch (piece.Type)
                 {
                     case PieceType.Pawn:
-                        GeneratePawnMoves((Pawn)piece);
+                        GeneratePawnMoves((Pawn) piece);
                         break;
                     case PieceType.Rook:
                         GenerateSlidingPieceMoves(piece, Rook.MoveDirection);
@@ -212,7 +388,7 @@ namespace Game
                         AddQuietMove(pawn, pawn.Square + 20);
                     }
                 }
-                var possibleCaptureSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
+                var possibleCaptureSquares = new[] {pawn.Square + 9, pawn.Square + 11};
                 foreach (var possibleCaptureSquare in possibleCaptureSquares)
                 {
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
@@ -222,7 +398,7 @@ namespace Game
                     }
                 }
 
-                var possibleEnPassantSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
+                var possibleEnPassantSquares = new[] {pawn.Square + 9, pawn.Square + 11};
                 if (EnPassantSquare != 0)
                 {
                     foreach (var possibleEnPassantSquare in possibleEnPassantSquares)
@@ -244,7 +420,7 @@ namespace Game
                         AddQuietMove(pawn, pawn.Square - 20);
                     }
                 }
-                var possibleCaptureSquares = new[] { pawn.Square - 9, pawn.Square - 11 };
+                var possibleCaptureSquares = new[] {pawn.Square - 9, pawn.Square - 11};
                 foreach (var possibleCaptureSquare in possibleCaptureSquares)
                 {
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
@@ -254,7 +430,7 @@ namespace Game
                     }
                 }
 
-                var possibleEnPassantSquares = new[] { pawn.Square - 9, pawn.Square - 11 };
+                var possibleEnPassantSquares = new[] {pawn.Square - 9, pawn.Square - 11};
                 if (EnPassantSquare != 0)
                 {
                     foreach (var possibleEnPassantSquare in possibleEnPassantSquares)
@@ -359,7 +535,7 @@ namespace Game
             }
             if (piece.Type == PieceType.King)
             {
-                GenerateCastlingMoves((King)piece);
+                GenerateCastlingMoves((King) piece);
             }
         }
 
@@ -367,24 +543,24 @@ namespace Game
         {
             if (king.Color == Color.White)
             {
-                if (CanCastle(CastlePermissions.WhiteQueen, new[] { Lookups.A2, Lookups.A3, Lookups.A4 }, Color.Black))
+                if (CanCastle(CastlePermissions.WhiteQueen, new[] {Lookups.A2, Lookups.A3, Lookups.A4}, Color.Black))
                 {
                     AddCastleMove(king, CastlePermissions.WhiteQueen);
                 }
 
-                if (CanCastle(CastlePermissions.WhiteKing, new[] { Lookups.A6, Lookups.A7 }, Color.Black))
+                if (CanCastle(CastlePermissions.WhiteKing, new[] {Lookups.A6, Lookups.A7}, Color.Black))
                 {
                     AddCastleMove(king, CastlePermissions.WhiteKing);
                 }
             }
             else
             {
-                if (CanCastle(CastlePermissions.BlackQueen, new[] { Lookups.H2, Lookups.H3, Lookups.H4 }, Color.White))
+                if (CanCastle(CastlePermissions.BlackQueen, new[] {Lookups.H2, Lookups.H3, Lookups.H4}, Color.White))
                 {
                     AddCastleMove(king, CastlePermissions.BlackQueen);
                 }
 
-                if (CanCastle(CastlePermissions.BlackKing, new[] { Lookups.H6, Lookups.H7 }, Color.White))
+                if (CanCastle(CastlePermissions.BlackKing, new[] {Lookups.H6, Lookups.H7}, Color.White))
                 {
                     AddCastleMove(king, CastlePermissions.BlackKing);
                 }
@@ -523,39 +699,12 @@ namespace Game
         }
     }
 
-    public class PositionKey
+    public class History
     {
-        private readonly int _keyForSide;
-        readonly Random _random = new Random();
-
-        public PositionKey()
-        {
-            _keyForSide = _random.Next();
-        }
-
-        static int[] EnPassantKeys { get; set; }
-        static PositionKey()
-        {
-            EnPassantKeys = new int[16];
-        }
-
-        public int GeneratePositionKey(Piece[] squares, Color side, int enPassant, CastlePermissions castlePermission)
-        {
-            int finalKey = 0;
-            for (int ndxSquares = 0; ndxSquares < squares.Length; ndxSquares++)
-            {
-                // todo: position keys
-                //finalKey |= squares[ndxSquares].PositionKeys[ndxSquares];
-            }
-            if (side == Color.White)
-            {
-                finalKey |= _keyForSide;
-            }
-            finalKey |= EnPassantKeys[enPassant];
-            finalKey |= (int)castlePermission;
-
-            return finalKey;
-        }
+        public Move Move { get; set; }
+        public CastlePermissions CastlePermissions { get; set; }
+        public int EnPassantSquare { get; set; }
+        public int FiftyMoveCount { get; set; }
+        public int PositionKey { get; set; }
     }
 }
-
