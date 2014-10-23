@@ -225,9 +225,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.PawnPieceList.Count.Should().Be(8);
+            b.PawnPieceList.Count(p => p.Color == Color.White).Should().Be(8);
         }
 
         [Test]
@@ -235,9 +234,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.QueenPieceList.Count.Should().Be(1);
+            b.QueenPieceList.Count(p => p.Color == Color.White).Should().Be(1);
         }
 
         [Test]
@@ -245,9 +243,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.KingPieceList.Count.Should().Be(1);
+            b.KingPieceList.Count(p => p.Color == Color.White).Should().Be(1);
         }
 
         [Test]
@@ -255,9 +252,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.BishopPieceList.Count.Should().Be(2);
+            b.BishopPieceList.Count(p => p.Color == Color.White).Should().Be(2);
         }
 
         [Test]
@@ -265,9 +261,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.KnightPieceList.Count.Should().Be(2);
+            b.KnightPieceList.Count(p => p.Color == Color.White).Should().Be(2);
         }
 
         [Test]
@@ -275,9 +270,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupWhiteToMove);
-            b.GeneratePieceList();
 
-            b.RookPieceList.Count.Should().Be(2);
+            b.RookPieceList.Count(p => p.Color == Color.White).Should().Be(2);
         }
 
         [Test]
@@ -285,9 +279,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.PawnPieceList.Count.Should().Be(8);
+            b.PawnPieceList.Count(p => p.Color == Color.Black).Should().Be(8);
         }
 
         [Test]
@@ -295,9 +288,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.QueenPieceList.Count.Should().Be(1);
+            b.QueenPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
         }
 
         [Test]
@@ -305,9 +297,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.KingPieceList.Count.Should().Be(1);
+            b.KingPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
         }
 
         [Test]
@@ -315,9 +306,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.BishopPieceList.Count.Should().Be(2);
+            b.BishopPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
         }
 
         [Test]
@@ -325,9 +315,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.KnightPieceList.Count.Should().Be(2);
+            b.KnightPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
         }
 
         [Test]
@@ -335,9 +324,8 @@ namespace Game.Test.Board
         {
             var b = new Game.Board();
             b.ParseFen(InitialBoardSetupBlackToMove);
-            b.GeneratePieceList();
 
-            b.RookPieceList.Count.Should().Be(2);
+            b.RookPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
         }
     }
 
@@ -351,7 +339,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(16);
         }
@@ -363,7 +350,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(16);
         }
@@ -375,7 +361,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(boardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(0);
         }
@@ -387,7 +372,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(boardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -399,7 +383,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(boardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -411,7 +394,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(boardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.PawnPieceList);
             board.Moves.Count.Should().Be(2);
         }
@@ -427,7 +409,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(0);
         }
@@ -439,7 +420,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -451,7 +431,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -463,7 +442,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(14);
         }
@@ -475,7 +453,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -487,7 +464,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(7);
         }
@@ -499,7 +475,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(14);
         }
@@ -510,7 +485,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -522,7 +496,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(7);
         }
@@ -534,7 +507,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.RookPieceList);
             board.Moves.Count.Should().Be(14);
         }
@@ -551,7 +523,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.BishopPieceList);
             board.Moves.Count.Should().Be(0);
         }
@@ -563,7 +534,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.BishopPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -575,7 +545,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.BishopPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -587,7 +556,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.BishopPieceList);
             board.Moves.Count.Should().Be(13);
         }
@@ -599,7 +567,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.BishopPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -617,7 +584,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -630,7 +596,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(2);
         }
@@ -643,7 +608,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves[0].PieceToMove.Square.Should().Be(92);
             board.Moves[1].PieceToMove.Square.Should().Be(92);
@@ -658,7 +622,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves[0].PieceToMove.Square.Should().Be(92);
             board.Moves[0].ToSquare.Should().Be(73);
@@ -673,7 +636,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(4);
         }
@@ -686,7 +648,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(8);
         }
@@ -699,7 +660,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KnightPieceList);
             board.Moves.Count.Should().Be(8);
         }
@@ -715,7 +675,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.QueenPieceList);
             board.Moves.Count.Should().Be(0);
         }
@@ -727,7 +686,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.QueenPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -739,7 +697,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.QueenPieceList);
             board.Moves.Count.Should().Be(8);
         }
@@ -751,7 +708,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.QueenPieceList);
             board.Moves.Count.Should().Be(27);
         }
@@ -763,7 +719,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.QueenPieceList);
             board.Moves.Count.Should().Be(1);
         }
@@ -779,7 +734,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(0);
         }
@@ -791,7 +745,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(8);
         }
@@ -803,7 +756,6 @@ namespace Game.Test.Board
             var board = new Game.Board();
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(8);
         }
@@ -817,7 +769,6 @@ namespace Game.Test.Board
                                      CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(2);
         }
@@ -831,7 +782,6 @@ namespace Game.Test.Board
                                      CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(2);
         }
@@ -845,7 +795,6 @@ namespace Game.Test.Board
                                      CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(2);
         }
@@ -859,7 +808,6 @@ namespace Game.Test.Board
                                      CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
             board.ParseFen(initialBoardSetup);
 
-            board.GeneratePieceList();
             board.GenerateMoves(board.KingPieceList);
             board.Moves.Count.Should().Be(2);
         }

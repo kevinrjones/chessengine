@@ -20,7 +20,7 @@ namespace Game
 
         private readonly ZobristHashing _hashing = new ZobristHashing();
         public int PositionKey;
-        
+
         protected int GeneratePositionKey()
         {
             int finalKey = 0;
@@ -72,15 +72,15 @@ namespace Game
             // hash piece out
             HashPiece(piece);
             // set square to empty
-            Squares[piece.Square] = new EmptyPiece{Square = piece.Square};
+            Squares[piece.Square] = new EmptyPiece { Square = piece.Square };
             // update the material            
-            Material[(int) SideToMove] -= piece.Value;
+            Material[(int)SideToMove] -= piece.Value;
             // update the piece list for this piece
             RemovePieceFromPieceList(piece);
         }
 
         internal void AddPiece(Piece piece)
-        {            
+        {
             // hash piece
             HashPiece(piece);
             // add piece to board
@@ -136,7 +136,7 @@ namespace Game
             // if kingisincheck
             //    TakeMove (take back the move)
             // return !(king is in check)
-            
+
         }
 
         private void RemovePieceFromPieceList(Piece piece)
@@ -200,7 +200,7 @@ namespace Game
         public int FiftyMove { get; set; }
         public int HistoryPly { get; set; }
         public int Ply { get; set; }
-        public List<History> History; 
+        public List<History> History;
         public int EnPassantSquare { get; set; }
         public CastlePermissions CastlePermission { get; set; }
         public int[] Material { get; set; }
@@ -237,6 +237,8 @@ namespace Game
             UpdateMaterial();
 
             PositionKey = GeneratePositionKey();
+
+            GeneratePieceLists();
         }
 
         private void UpdateMaterial()
@@ -247,7 +249,7 @@ namespace Game
                 var piece = Squares[sq];
                 if (piece.Type != PieceType.Empty)
                 {
-                    Material[(int) piece.Color] += piece.Value;
+                    Material[(int)piece.Color] += piece.Value;
                 }
             }
         }
@@ -305,7 +307,7 @@ namespace Game
 
         public List<Move> Moves = new List<Move>();
 
-        public void GeneratePieceList()
+        public void GeneratePieceLists()
         {
             for (int i = 0; i < EmptySquares.Length; i++)
             {
@@ -319,29 +321,29 @@ namespace Game
                 {
                     EmptySquares[square] = true;
                 }
-                else if (piece.Color == SideToMove)
+                switch (piece.Type)
                 {
-                    switch (piece.Type)
-                    {
-                        case PieceType.Pawn:
-                            PawnPieceList.Add((Pawn) piece);
-                            break;
-                        case PieceType.Rook:
-                            RookPieceList.Add((Rook) piece);
-                            break;
-                        case PieceType.Knight:
-                            KnightPieceList.Add((Knight) piece);
-                            break;
-                        case PieceType.Bishop:
-                            BishopPieceList.Add((Bishop) piece);
-                            break;
-                        case PieceType.Queen:
-                            QueenPieceList.Add((Queen) piece);
-                            break;
-                        case PieceType.King:
-                            KingPieceList.Add((King) piece);
-                            break;
-                    }
+                    case PieceType.Empty:
+                        EmptySquares[square] = true;
+                        break;
+                    case PieceType.Pawn:
+                        PawnPieceList.Add((Pawn)piece);
+                        break;
+                    case PieceType.Rook:
+                        RookPieceList.Add((Rook)piece);
+                        break;
+                    case PieceType.Knight:
+                        KnightPieceList.Add((Knight)piece);
+                        break;
+                    case PieceType.Bishop:
+                        BishopPieceList.Add((Bishop)piece);
+                        break;
+                    case PieceType.Queen:
+                        QueenPieceList.Add((Queen)piece);
+                        break;
+                    case PieceType.King:
+                        KingPieceList.Add((King)piece);
+                        break;
                 }
             }
         }
@@ -350,26 +352,29 @@ namespace Game
         {
             foreach (var piece in pieceList)
             {
-                switch (piece.Type)
+                if (piece.Color == SideToMove)
                 {
-                    case PieceType.Pawn:
-                        GeneratePawnMoves((Pawn) piece);
-                        break;
-                    case PieceType.Rook:
-                        GenerateSlidingPieceMoves(piece, Rook.MoveDirection);
-                        break;
-                    case PieceType.Knight:
-                        GenerateNonSlidingPieceMoves(piece, Knight.MoveDirection);
-                        break;
-                    case PieceType.Bishop:
-                        GenerateSlidingPieceMoves(piece, Bishop.MoveDirection);
-                        break;
-                    case PieceType.Queen:
-                        GenerateSlidingPieceMoves(piece, Queen.MoveDirection);
-                        break;
-                    case PieceType.King:
-                        GenerateNonSlidingPieceMoves(piece, King.MoveDirection);
-                        break;
+                    switch (piece.Type)
+                    {
+                        case PieceType.Pawn:
+                            GeneratePawnMoves((Pawn) piece);
+                            break;
+                        case PieceType.Rook:
+                            GenerateSlidingPieceMoves(piece, Rook.MoveDirection);
+                            break;
+                        case PieceType.Knight:
+                            GenerateNonSlidingPieceMoves(piece, Knight.MoveDirection);
+                            break;
+                        case PieceType.Bishop:
+                            GenerateSlidingPieceMoves(piece, Bishop.MoveDirection);
+                            break;
+                        case PieceType.Queen:
+                            GenerateSlidingPieceMoves(piece, Queen.MoveDirection);
+                            break;
+                        case PieceType.King:
+                            GenerateNonSlidingPieceMoves(piece, King.MoveDirection);
+                            break;
+                    }
                 }
             }
         }
@@ -388,7 +393,7 @@ namespace Game
                         AddQuietMove(pawn, pawn.Square + 20);
                     }
                 }
-                var possibleCaptureSquares = new[] {pawn.Square + 9, pawn.Square + 11};
+                var possibleCaptureSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
                 foreach (var possibleCaptureSquare in possibleCaptureSquares)
                 {
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
@@ -398,7 +403,7 @@ namespace Game
                     }
                 }
 
-                var possibleEnPassantSquares = new[] {pawn.Square + 9, pawn.Square + 11};
+                var possibleEnPassantSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
                 if (EnPassantSquare != 0)
                 {
                     foreach (var possibleEnPassantSquare in possibleEnPassantSquares)
@@ -420,7 +425,7 @@ namespace Game
                         AddQuietMove(pawn, pawn.Square - 20);
                     }
                 }
-                var possibleCaptureSquares = new[] {pawn.Square - 9, pawn.Square - 11};
+                var possibleCaptureSquares = new[] { pawn.Square - 9, pawn.Square - 11 };
                 foreach (var possibleCaptureSquare in possibleCaptureSquares)
                 {
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
@@ -430,7 +435,7 @@ namespace Game
                     }
                 }
 
-                var possibleEnPassantSquares = new[] {pawn.Square - 9, pawn.Square - 11};
+                var possibleEnPassantSquares = new[] { pawn.Square - 9, pawn.Square - 11 };
                 if (EnPassantSquare != 0)
                 {
                     foreach (var possibleEnPassantSquare in possibleEnPassantSquares)
@@ -535,7 +540,7 @@ namespace Game
             }
             if (piece.Type == PieceType.King)
             {
-                GenerateCastlingMoves((King) piece);
+                GenerateCastlingMoves((King)piece);
             }
         }
 
@@ -543,24 +548,24 @@ namespace Game
         {
             if (king.Color == Color.White)
             {
-                if (CanCastle(CastlePermissions.WhiteQueen, new[] {Lookups.A2, Lookups.A3, Lookups.A4}, Color.Black))
+                if (CanCastle(CastlePermissions.WhiteQueen, new[] { Lookups.A2, Lookups.A3, Lookups.A4 }, Color.Black))
                 {
                     AddCastleMove(king, CastlePermissions.WhiteQueen);
                 }
 
-                if (CanCastle(CastlePermissions.WhiteKing, new[] {Lookups.A6, Lookups.A7}, Color.Black))
+                if (CanCastle(CastlePermissions.WhiteKing, new[] { Lookups.A6, Lookups.A7 }, Color.Black))
                 {
                     AddCastleMove(king, CastlePermissions.WhiteKing);
                 }
             }
             else
             {
-                if (CanCastle(CastlePermissions.BlackQueen, new[] {Lookups.H2, Lookups.H3, Lookups.H4}, Color.White))
+                if (CanCastle(CastlePermissions.BlackQueen, new[] { Lookups.H2, Lookups.H3, Lookups.H4 }, Color.White))
                 {
                     AddCastleMove(king, CastlePermissions.BlackQueen);
                 }
 
-                if (CanCastle(CastlePermissions.BlackKing, new[] {Lookups.H6, Lookups.H7}, Color.White))
+                if (CanCastle(CastlePermissions.BlackKing, new[] { Lookups.H6, Lookups.H7 }, Color.White))
                 {
                     AddCastleMove(king, CastlePermissions.BlackKing);
                 }
