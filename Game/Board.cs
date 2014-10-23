@@ -69,13 +69,9 @@ namespace Game
 
         internal void ClearPiece(Piece piece)
         {
-            // hash piece out
             HashPiece(piece);
-            // set square to empty
             Squares[piece.Square] = new EmptyPiece { Square = piece.Square };
-            // update the material            
             Material[(int)SideToMove] -= piece.Value;
-            // update the piece list for this piece
             RemovePieceFromPieceList(piece);
         }
 
@@ -88,7 +84,7 @@ namespace Game
             // update material
             Material[(int)SideToMove] += piece.Value;
             // update piece list
-            AddPieceFromToList(piece);
+            AddPieceToPieceList(piece);
         }
 
         internal void MovePiece(Piece from, Piece to)
@@ -99,9 +95,12 @@ namespace Game
             Squares[from.Square] = new EmptyPiece { Square = from.Square };
             // add piece to board
             Squares[to.Square] = to;
+
+            // hash piece in
+            HashPiece(to);
             // update the piece list            
             RemovePieceFromPieceList(from);
-            AddPieceFromToList(to);
+            AddPieceToPieceList(to);
         }
 
         internal void MakeMove(Move move)
@@ -110,8 +109,11 @@ namespace Game
             // CastlePerms array
 
             // store current side so we can check king attack later
+            Color currentSide = SideToMove;
             // add poskey to history array
+            var history = new History {PositionKey = PositionKey};
             // check enpas capture - if so then remove pawn one rank up ClearPiece(to +- 10)
+            
             // check castle move - king has moved, now move rook. Switch on 'to' square and move rook calling MovePiece(to, from) for rook
             // if enpas is set, hash it out
             // add other bits to the game board history (move, fifty, enpas, castle perms)
@@ -170,7 +172,7 @@ namespace Game
             }
         }
 
-        private void AddPieceFromToList(Piece piece)
+        private void AddPieceToPieceList(Piece piece)
         {
             switch (piece.Type)
             {
@@ -390,7 +392,7 @@ namespace Game
                     AddPawnMove(pawn, pawn.Square + 10);
                     if (rank2 && EmptySquares[pawn.Square + 20])
                     {
-                        AddQuietMove(pawn, pawn.Square + 20);
+                        AddPawnStartMove(pawn, pawn.Square + 20);                        
                     }
                 }
                 var possibleCaptureSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
@@ -399,7 +401,7 @@ namespace Game
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
                         Squares[possibleCaptureSquare].Color == Color.Black)
                     {
-                        AddCaptureMove(pawn, possibleCaptureSquare);
+                        AddCaptureMove(pawn, Squares[possibleCaptureSquare]);
                     }
                 }
 
@@ -431,7 +433,7 @@ namespace Game
                     if (Squares[possibleCaptureSquare].Type != PieceType.OffBoard &&
                         Squares[possibleCaptureSquare].Color == Color.White)
                     {
-                        AddCaptureMove(pawn, possibleCaptureSquare);
+                        AddCaptureMove(pawn, Squares[possibleCaptureSquare]);
                     }
                 }
 
@@ -449,6 +451,11 @@ namespace Game
             }
         }
 
+        private void AddPawnStartMove(Pawn pawn, int square)
+        {
+            Moves.Add(new Move(pawn, square){IsPawnStartMove = true});
+        }
+
         private void AddQuiteMove(Piece piece, int square)
         {
             Moves.Add(new Move(piece, square));
@@ -459,9 +466,9 @@ namespace Game
             Moves.Add(new Move(piece, square));
         }
 
-        private void AddCaptureMove(Piece piece, int possibleCaptureSquare)
+        private void AddCaptureMove(Piece piece, Piece pieceToCapture)
         {
-            Moves.Add(new Move(piece, possibleCaptureSquare));
+            Moves.Add(new Move(piece, pieceToCapture));
         }
 
         private void AddQuietMove(Piece piece, int to)
@@ -512,7 +519,7 @@ namespace Game
                     }
                     else if (pieceToTest.Color != piece.Color)
                     {
-                        AddCaptureMove(piece, testSquare);
+                        AddCaptureMove(piece, pieceToTest);
                         break;
                     }
                     testSquare += direction;
@@ -534,7 +541,7 @@ namespace Game
                     }
                     else if (pieceToTest.Color != piece.Color)
                     {
-                        AddCaptureMove(piece, piece.Square + direction);
+                        AddCaptureMove(piece, pieceToTest);
                     }
                 }
             }

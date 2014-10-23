@@ -8,13 +8,20 @@ namespace Game
         internal Piece PromotedTo;
         internal Piece PieceToMove;
         // todo
-        internal bool IsPawnStartMove;
-        internal Piece Captured;
+        internal bool IsPawnStartMove = false;
+        internal Piece Captured = new EmptyPiece();
 
         public Move(Piece piece, int toSquare)
         {
             PieceToMove = piece;
             ToSquare = toSquare;
+        }
+
+        public Move(Piece piece, Piece pieceToCapture)
+        {
+            PieceToMove = piece;
+            ToSquare = pieceToCapture.Square;
+            Captured = pieceToCapture;
         }
 
         public Move(Piece piece, int toSquare, Piece promotedTo)

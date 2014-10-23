@@ -15,7 +15,7 @@ namespace Game.Test
             public void ShouldHashASinglePiece()
             {
                 var board = new Game.Board();
-                var piece = new Pawn {Square = 1};
+                var piece = new Pawn { Square = 1 };
                 board.HashPiece(piece);
 
                 board.PositionKey.Should().Be(HashPawnSquareOne);
@@ -25,7 +25,7 @@ namespace Game.Test
             public void ShouldHashOutASinglePiece()
             {
                 var board = new Game.Board();
-                var piece = new Pawn {Square = 1};
+                var piece = new Pawn { Square = 1 };
                 board.HashPiece(piece);
                 board.HashPiece(piece);
 
@@ -36,8 +36,8 @@ namespace Game.Test
             public void ShouldHashOutASecondPiece()
             {
                 var board = new Game.Board();
-                var pawn1 = new Pawn {Square = 1};
-                var pawn2 = new Pawn {Square = 2};
+                var pawn1 = new Pawn { Square = 1 };
+                var pawn2 = new Pawn { Square = 2 };
                 board.HashPiece(pawn2);
                 board.HashPiece(pawn1);
                 board.HashPiece(pawn2);
@@ -49,7 +49,7 @@ namespace Game.Test
             public void ShouldHashInTheSide()
             {
                 var board = new Game.Board();
-                var pawn1 = new Pawn {Square = 1};
+                var pawn1 = new Pawn { Square = 1 };
                 board.HashSide();
                 board.HashPiece(pawn1);
 
@@ -63,7 +63,7 @@ namespace Game.Test
             {
                 var board = new Game.Board();
                 const int enPassantSquare = 42;
-                var pawn1 = new Pawn {Square = 1};
+                var pawn1 = new Pawn { Square = 1 };
                 board.HashEnPassant(enPassantSquare);
                 board.HashPiece(pawn1);
 
@@ -77,7 +77,7 @@ namespace Game.Test
                 "Longish test; random keys are always the same so this needs only to be run if the algorithm changes")]
             public void NoTeoKeysShouldBeTheSame()
             {
-                ZobristHashing hash = new ZobristHashing();
+                var hash = new ZobristHashing();
 
                 for (int i = 0; i < hash.PieceKeys.Length; i++)
                 {
