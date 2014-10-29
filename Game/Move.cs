@@ -1,20 +1,22 @@
+using System;
+
 namespace Game
 {
     public class Move
     {
-        public CastlePermissions CastlePermission { get; private set; }
+        public bool IsCastleMove { get; private set; }
         public int FromSquare { get { return PieceToMove.Square; } }
+
         internal int ToSquare;
-        internal Piece PromotedTo;
+        internal Piece PromotedTo = new EmptyPiece();
         internal Piece PieceToMove;
-        // todo
+        internal bool IsEnPassantCapture = false;
         internal bool IsPawnStartMove = false;
         internal Piece Captured = new EmptyPiece();
 
-        public Move(Piece piece, int toSquare)
+        // todo - test detect pawn start move and set PawnStartMove 
+        public Move(Piece piece, int toSquare) : this(piece, toSquare, false)
         {
-            PieceToMove = piece;
-            ToSquare = toSquare;
         }
 
         public Move(Piece piece, Piece pieceToCapture)
@@ -30,14 +32,18 @@ namespace Game
             ToSquare = toSquare;
             PromotedTo = promotedTo;
             PromotedTo.Color = piece.Color;
-            PromotedTo.Square = piece.Square;
+            PromotedTo.Square = toSquare;
         }
 
-        public Move(Piece piece, int toSquare, CastlePermissions castlePermission)
+        public Move(Piece piece, int toSquare, bool isCastleMove)
         {
             PieceToMove = piece;
             ToSquare = toSquare;
-            CastlePermission = castlePermission;
+            if (piece.Type == PieceType.Pawn && Math.Abs(piece.Square - toSquare) == 20)
+            {
+                IsPawnStartMove = true;
+            }
+            IsCastleMove = isCastleMove;
         }
 
         public override string ToString()

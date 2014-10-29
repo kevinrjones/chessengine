@@ -80,14 +80,14 @@ namespace Game
             // hash piece
             HashPiece(piece);
             // add piece to board
-            Squares[piece.Square] = piece.Clone();
+            Squares[piece.Square] = piece;
             // update material
             Material[(int)SideToMove] += piece.Value;
             // update piece list
-            AddPieceToPieceList(piece.Clone());
+            AddPieceToPieceList(piece);
         }
 
-        internal void CastlePiece(Piece from, Rook to)
+        internal void MovePiece(Piece from, Piece to)
         {
             // hash piece out
             HashPiece(from);
@@ -102,312 +102,21 @@ namespace Game
             HashPiece(to);
             // update the piece list            
             RemovePieceFromPieceList(from);
-            AddPieceToPieceList(to.Clone());
+            AddPieceToPieceList(to);
         }
 
-        internal void MovePiece(Piece from, int toSquare)
+        internal void MakeMove(Move move)
         {
-            // hash piece out
-            HashPiece(from);
-            RemovePieceFromPieceList(from);
+            // video 36
+            // CastlePerms array
 
-
-            // set square to empty            
-            Squares[from.Square] = new EmptyPiece { Square = from.Square };
-            
-            // add piece to board
-            var to = from.Clone();
-            to.Square = toSquare;
-
-            //from.Square = toSquare;
-
-            Squares[toSquare] = to;
-
-            // hash piece in
-            HashPiece(to);
-            // update the piece list            
-            AddPieceToPieceList(to.Clone());
-        }
-
-
-        internal bool MakeMove(Move move)
-        {
             // store current side so we can check king attack later
             Color currentSide = SideToMove;
             // add poskey to history array
-            var history = new History { PositionKey = PositionKey, Move = move, EnPassantSquare = EnPassantSquare, CastlePermissions = CastlePermission, FiftyMoveCount = FiftyMoveCount };
+            var history = new History {PositionKey = PositionKey, Move = move, EnPassantSquare = EnPassantSquare, CastlePermissions = CastlePermission, FiftyMoveCount = FiftyMoveCount};
             History.Add(history);
-
-            // check enpas capture - if so then remove pawn one rank up ClearPiece(to +- 10)
-            MakeEnPassantCapture(move);
-
-            // check castle move - king has moved, now move rook. Switch on 'to' square and move rook calling MovePiece(to, from) for rook
-            MoveRookIfCastling(move);
-            // if enpas is set, hash it out
-            UpdateEnPassantSquare();
-
-            HashOutCastlePermissions();
-            // add other bits to the game board history (move, fifty, enpas, castle perms) - 
-            // not sure this needs to be here - can we add all these bits when we create the history?
-
-
-            // update castle perms using from and to square pieces
-            UpdateCastlePermissions(move);
-
-            ResetEnPassantSquare();
-
-            // hash in castle perms
-
-            HashInCastlePermissions();
-
-            ClearCapturedPiece(move);
-
-            UpdateThePlyCounts();
-
-            UpdateDetailsIfPawnMove(move);
-
-
-            MovePiece(move.PieceToMove, move.ToSquare);
-
-            PromotePiece(move);
-
-            // Switch side
-            SideToMove = SideToMove == Color.Black ? Color.White : Color.Black;
-
-            // hash side
-            HashSide();
-
             
-            var king = GetSideToMovesKing(currentSide);
-
-            if (IsSideThatIsMovingsKingAttacked(king))
-            {
-                TakeMove();
-                return false;
-            }
-            return true;
-
-
-        }
-
-        private bool IsSideThatIsMovingsKingAttacked(King king)
-        {
-            return IsAttacked(king.Square, SideToMove);
-        }
-
-        private King GetSideToMovesKing(Color currentSide)
-        {
-            var king = KingPieceList[0].Color == currentSide ? KingPieceList[0] : KingPieceList[1];
-            return king;
-        }
-
-        internal void TakeMove()
-        {
-            // decrement the plys
-            HistoryPly--;
-            Ply--;
-
-            History item = History[HistoryPly];
-            Move move = item.Move;
-
-            // hash EP
-            if (EnPassantSquare != 0)
-            {
-                HashEnPassant(EnPassantSquare);
-            }
-
-            // hashCastle()
-            HashCastle();
-
-            // set castleperm, fiftyMove and enPas from move (from history)
-            CastlePermission = item.CastlePermissions;
-            FiftyMoveCount = item.FiftyMoveCount;
-            EnPassantSquare = item.EnPassantSquare;
-
-            // if enpas sq set, hashep()
-            if (EnPassantSquare != 0)
-            {
-                HashEnPassant(EnPassantSquare);
-            }
-
-            // hashCastle
-            HashCastle();
-
-            SideToMove = SideToMove == Color.White ? Color.Black : Color.White;
-            HashSide();
-
-            // if en pass capture - add a pawn
-            /* if side == white add black at to-10
-             * else add white at to+10
-             */
-            if (move.IsEnPassantCapture)
-            {
-                if (SideToMove == Color.White)
-                {
-                    AddPiece(new Pawn { Square = move.ToSquare + 10, Color = Color.Black });
-                }
-                else
-                {
-                    AddPiece(new Pawn { Square = move.ToSquare - 10, Color = Color.White });
-                }
-            }
-            /* if(castle) put rook back*/
-            if ((item.CastlePermissions & (CastlePermissions)0xFFFF) != 0)
-            {
-                Rook rook;
-                switch (move.ToSquare)
-                {
-                    case Lookups.C1:
-                        rook = new Rook { Square = Lookups.D1, Color = Color.White };
-                        MovePiece(rook, Lookups.A1);
-                        break;
-                    case Lookups.G1:
-                        rook = new Rook { Square = Lookups.F1, Color = Color.White };
-                        MovePiece(rook, Lookups.H1);
-                        break;
-                    case Lookups.C8:
-                        rook = new Rook { Square = Lookups.D8, Color = Color.Black };
-                        MovePiece(rook, Lookups.A8);
-                        break;
-                    case Lookups.G8:
-                        rook = new Rook { Square = Lookups.F8, Color = Color.Black };
-                        MovePiece(rook, Lookups.H8);
-                        break;
-                }
-
-            }
-
-            // If there's been a promotion then the
-            // piece we're moving back won't be the piece we moved
-            // originally, it'll be the promoted piece
-            // so grab the piece from the square not from the move
-            var pieceToMove = Squares[move.ToSquare];            
-            MovePiece(pieceToMove, move.FromSquare);
-            // if capture, add piece to 'to' square
-
-            if (move.Captured.Type != PieceType.Empty)
-            {
-                AddPiece(move.Captured);
-            }
-
-            // if promoted, clear (from) addPiece, either white or black depending on side to move
-            if (move.PromotedTo.Type != PieceType.Empty)
-            {
-                ClearPiece(Squares[move.FromSquare]);
-                var piece = new Pawn { Square = move.FromSquare, Color = SideToMove };
-                AddPiece(piece);
-            }
-
-        }
-
-        // todo - bitboards really useful here?
-        private bool IsAttacked(int square, Color color)
-        {
-            return IsAttackedByAKing(square, color)
-                   || IsAttackedByAKnight(square, color)
-                   || IsAttackedByPawn(square, color)
-                   || IsSquareAttackedByABishop(square, color)
-                   || IsSquareAttackedByARook(square, color);
-        }
-
-        private void PromotePiece(Move move)
-        {
-            // if promoted
-            if (move.PromotedTo.Type != PieceType.Empty)
-            {
-                //    Clear old piece
-                ClearPiece(Squares[move.ToSquare]);
-                //    Add new piece
-                AddPiece(move.PromotedTo);
-            }
-        }
-
-        private void UpdateDetailsIfPawnMove(Move move)
-        {
-            if (move.PieceToMove.Type == PieceType.Pawn)
-            {
-                FiftyMoveCount = 0;
-                if (move.IsPawnStartMove)
-                {
-                    EnPassantSquare = move.PieceToMove.Color == Color.White ? move.FromSquare + 10 : move.FromSquare - 10;
-                    HashEnPassant(EnPassantSquare);
-                }
-            }
-        }
-
-        private void UpdateThePlyCounts()
-        {
-            HistoryPly++;
-            Ply++;
-        }
-
-        private void ClearCapturedPiece(Move move)
-        {
-            if (move.Captured.Type != PieceType.Empty)
-            {
-                ClearPiece(move.Captured);
-                FiftyMoveCount = 0;
-            }
-        }
-
-        private void HashInCastlePermissions()
-        {
-            HashCastle();
-        }
-
-        private void ResetEnPassantSquare()
-        {
-            EnPassantSquare = 0;
-        }
-
-        private void UpdateCastlePermissions(Move move)
-        {
-            CastlePermission &= (CastlePermissions)Lookups.CastlePerms[move.FromSquare];
-            CastlePermission &= (CastlePermissions)Lookups.CastlePerms[move.ToSquare];
-        }
-
-        private void HashOutCastlePermissions()
-        {
-            HashCastle();
-        }
-
-        private void UpdateEnPassantSquare()
-        {
-            if (EnPassantSquare != 0)
-            {
-                PositionKey ^= _hashing.GetEnPassantKey(EnPassantSquare);
-            }
-        }
-
-        private void MoveRookIfCastling(Move move)
-        {
-            if (move.IsCastleMove)
-            {
-                Rook rook;
-                switch (move.ToSquare)
-                {
-                    case Lookups.C1:
-                        rook = new Rook { Square = Lookups.D1, Color = Color.White };
-                        CastlePiece(Squares[Lookups.A1], rook);
-                        break;
-                    case Lookups.G1:
-                        rook = new Rook { Square = Lookups.F1, Color = Color.White };
-                        CastlePiece(Squares[Lookups.H1], rook);
-                        break;
-                    case Lookups.C8:
-                        rook = new Rook { Square = Lookups.D8, Color = Color.Black };
-                        CastlePiece(Squares[Lookups.A8], rook);
-                        break;
-                    case Lookups.G8:
-                        rook = new Rook { Square = Lookups.F8, Color = Color.Black };
-                        CastlePiece(Squares[Lookups.H8], rook);
-                        break;
-                }
-            }
-        }
-
-        private void MakeEnPassantCapture(Move move)
-        {
+            // check enpas capture - if so then remove pawn one rank up ClearPiece(to +- 10)
             if (move.IsEnPassantCapture)
             {
                 if (move.PieceToMove.Color == Color.White)
@@ -419,6 +128,62 @@ namespace Game
                     ClearPiece(Squares[move.ToSquare + 10]);
                 }
             }
+
+            // check castle move - king has moved, now move rook. Switch on 'to' square and move rook calling MovePiece(to, from) for rook
+            if((move.CastlePermission & (CastlePermissions) 0xFFFF) != 0)
+            {
+                Piece piece;
+                Rook rook;
+                switch (move.ToSquare)
+                {
+                    case Lookups.C1:
+                        rook = new Rook { Square = Lookups.D1, Color = Color.White};
+                        MovePiece(Squares[Lookups.A1], rook);
+                        break;
+                    case Lookups.G1:
+                        rook = new Rook { Square = Lookups.F1, Color = Color.White };
+                        MovePiece(Squares[Lookups.H1], rook);
+                        break;
+                    case Lookups.C8:
+                        rook = new Rook { Square = Lookups.D8, Color = Color.Black };
+                        MovePiece(Squares[Lookups.D8], rook);
+                        break;
+                    case Lookups.G8:
+                        rook = new Rook { Square = Lookups.F8, Color = Color.Black };
+                        MovePiece(Squares[Lookups.F8], rook);
+                        break;
+                }
+            }
+            // if enpas is set, hash it out
+
+            // add other bits to the game board history (move, fifty, enpas, castle perms) - 
+            // not sure this needs to be here - can we add all these bits when we create the history?
+            
+            // update castle perms using from and to square pieces
+            // hash in castle perms
+            // is it a captured piece
+            //    ClearPiece(to)
+            //    reset fifty move count
+            // update hisply
+            HistoryPly++;
+            // update game ply
+            Ply++;
+
+            // if pawn move
+            //    reset 50 move
+            //    if pawn start
+            //      set enpas square (for white or black)
+            //      hash enpas square
+            // Move(from, to)
+            // if promoted
+            //    Clear old piece
+            //    Add new piece
+            // Switch side
+            // hash side
+            // if kingisincheck
+            //    TakeMove (take back the move)
+            // return !(king is in check)
+
         }
 
         private void RemovePieceFromPieceList(Piece piece)
@@ -639,7 +404,7 @@ namespace Game
                     switch (piece.Type)
                     {
                         case PieceType.Pawn:
-                            GeneratePawnMoves((Pawn)piece);
+                            GeneratePawnMoves((Pawn) piece);
                             break;
                         case PieceType.Rook:
                             GenerateSlidingPieceMoves(piece, Rook.MoveDirection);
@@ -672,7 +437,7 @@ namespace Game
                     AddPawnMove(pawn, pawn.Square + 10);
                     if (rank2 && EmptySquares[pawn.Square + 20])
                     {
-                        AddPawnStartMove(pawn, pawn.Square + 20);
+                        AddPawnStartMove(pawn, pawn.Square + 20);                        
                     }
                 }
                 var possibleCaptureSquares = new[] { pawn.Square + 9, pawn.Square + 11 };
@@ -733,12 +498,12 @@ namespace Game
 
         private void AddPawnStartMove(Pawn pawn, int square)
         {
-            Moves.Add(new Move(pawn, square) { IsPawnStartMove = true });
+            Moves.Add(new Move(pawn, square){IsPawnStartMove = true});
         }
 
         private void AddEnPassantMove(Piece piece, int square)
         {
-            Moves.Add(new Move(piece, square) { IsEnPassantCapture = true });
+            Moves.Add(new Move(piece, square){IsEnPassantCapture = true});
         }
 
         private void AddCaptureMove(Piece piece, Piece pieceToCapture)
@@ -890,7 +655,7 @@ namespace Game
             {
                 toSquare = Lookups.G8;
             }
-            Moves.Add(new Move(king, toSquare, true));
+            Moves.Add(new Move(king, toSquare, castlePermissions));
         }
 
         private bool IsSquareAttackedByARook(int square, Color side)

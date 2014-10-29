@@ -17,7 +17,14 @@ namespace ChessConsole
             board.GeneratePieceLists();
             board.GenerateMoves();
             Console.WriteLine(board);
-            
+
+            var m = new Move(new Pawn{Square = 34, Color = Color.White}, 44);
+
+            board.MakeMove(m);
+            Console.WriteLine(board);
+
+            board.TakeMove();
+            Console.WriteLine(board);
             //Console.WriteLine(board.Moves.Count + " moves");
             //foreach (var move in board.Moves)
             //{

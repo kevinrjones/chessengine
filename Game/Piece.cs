@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlClient;
 
 namespace Game
 {
@@ -15,7 +16,7 @@ namespace Game
         King = 32,
     };
 
-    public class Piece
+    public abstract class Piece
     {
         public PieceType Type = PieceType.Empty;
 
@@ -31,6 +32,7 @@ namespace Game
         public bool Slides { get; protected set; }
         public int Value { get; protected set; }
         public int Square { get; set; }
+        public abstract Piece Clone();
     }
 
     public class EmptyPiece : Piece
@@ -43,6 +45,11 @@ namespace Game
         {
             return ".";
         }
+
+        public override Piece Clone()
+        {
+            return new EmptyPiece{Color = Color, Square = Square};
+        }
     }
 
     public class OffBoardPiece : Piece
@@ -54,6 +61,10 @@ namespace Game
         public override string ToString()
         {
             return "X";
+        }
+        public override Piece Clone()
+        {
+            return new OffBoardPiece { Color = Color, Square = Square };
         }
     }
 
@@ -73,6 +84,10 @@ namespace Game
         {
             return Color == Color.White ? "K" : "k";
         }
+        public override Piece Clone()
+        {
+            return new King { Color = Color, Square = Square };
+        }
     }
 
     public class Queen : Piece
@@ -89,6 +104,10 @@ namespace Game
         public override string ToString()
         {
             return Color == Color.White ? "Q" : "q";
+        }
+        public override Piece Clone()
+        {
+            return new Queen { Color = Color, Square = Square };
         }
     }
 
@@ -107,6 +126,10 @@ namespace Game
         {
             return Color == Color.White ? "R" : "r";
         }
+        public override Piece Clone()
+        {
+            return new Rook { Color = Color, Square = Square };
+        }
     }
 
     public class Bishop : Piece
@@ -124,6 +147,11 @@ namespace Game
         {
             return Color == Color.White ? "B" : "b";
         }
+        public override Piece Clone()
+        {
+            return new Bishop { Color = Color, Square = Square };
+        }
+
     }
 
     public class Knight : Piece
@@ -141,6 +169,10 @@ namespace Game
         public override string ToString()
         {
             return Color == Color.White ? "N" : "n";
+        }
+        public override Piece Clone()
+        {
+            return new Knight { Color = Color, Square = Square };
         }
     }
 
@@ -160,6 +192,10 @@ namespace Game
         public override string ToString()
         {
             return Color == Color.White ? "P" : "p";
+        }
+        public override Piece Clone()
+        {
+            return new Pawn { Color = Color, Square = Square };
         }
     }
 }

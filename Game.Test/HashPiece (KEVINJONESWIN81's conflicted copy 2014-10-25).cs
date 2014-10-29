@@ -75,7 +75,7 @@ namespace Game.Test
             [Test]
             [Ignore(
                 "Longish test; random keys are always the same so this needs only to be run if the algorithm changes")]
-            public void NoTwoKeysShouldBeTheSame()
+            public void NoTeoKeysShouldBeTheSame()
             {
                 var hash = new ZobristHashing();
 
