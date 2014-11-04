@@ -51,6 +51,7 @@
     <Compile Include="Board.cs" />
     <Compile Include="ClearPiece.cs" />
     <Compile Include="GameIndexToFullIndex.cs" />
+    <Compile Include="GenerateMoves.cs" />
     <Compile Include="HashPiece.cs" />
     <Compile Include="IsSquareAttacked.cs" />
     <Compile Include="Lookups.cs" />

@@ -89,7 +89,6 @@ namespace Game
             ResetLookups();
         }
 
-
         public static void ResetLookups()
         {
             for (int i = 0; i < BoardSize; i++)
@@ -211,6 +210,7 @@ namespace Game
         }
 
         public const int Maxmoves = 2048;
-        
+        public const int MaxDepth = 20;
+
     }
 }

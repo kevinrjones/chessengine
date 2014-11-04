@@ -171,6 +171,26 @@ namespace Game.Test
 
                 _board.IsSquareAttacked(attackSquare, Color.Black).Should().BeFalse();
             }
+
+            [Test]
+            public void ShouldNotBeAttackedByAQueenThatIsBehindAPieceOfTheSameColorAsTheSquareUnderAttack()
+            {
+                const int attackSquare = Game.Lookups.E7;
+                const string initialBoardSetup = "rnbq1bnr/ppppkppp/8/8/8/4P3/PPPPQPPP/RNB1KBNR w KQkq - 0 1";
+                _board.ParseFen(initialBoardSetup);
+
+                _board.IsSquareAttacked(attackSquare, Color.White).Should().BeFalse();
+            }
+
+            [Test]
+            public void ShouldNotBeAttackedByABishopThatIsBehindAPieceOfTheSameColorAsTheSquareUnderAttackAfterKingHasMoved()
+            {
+                const int attackSquare = Game.Lookups.E7;
+                const string initialBoardSetup = "rnbq1bnr/ppppkppp/4p3/8/1P6/B7/P1PPPPPP/RN11KBNR b KQkq - 0 1";
+                _board.ParseFen(initialBoardSetup);
+
+                _board.IsSquareAttacked(attackSquare, Color.White).Should().BeFalse();
+            }
         }
     }
 }

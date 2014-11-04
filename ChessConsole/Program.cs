@@ -11,20 +11,36 @@ namespace ChessConsole
     {
         static void Main(string[] args)
         {
-            Board board = new Board();
+            var board = new Board();
             board.ParseFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-            Console.WriteLine("0x{0:x8}", board.PositionKey);
-            board.GeneratePieceLists();
-            board.GenerateMoves();
-            Console.WriteLine(board);
 
-            var m = new Move(new Pawn{Square = 34, Color = Color.White}, 44);
+            // d2d3
+            //board.ParseFen("rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR b KQkq - 0 1");
 
-            board.MakeMove(m);
-            Console.WriteLine(board);
+            // c7c6
+            //board.ParseFen("rnbqkbnr/pp1ppppp/2p5/8/8/3P4/PPP1PPPP/RNBQKBNR w KQkq - 0 1");
 
-            board.TakeMove();
-            Console.WriteLine(board);
+            // e1d2
+            //board.ParseFen("rnbqkbnr/pp1ppppp/2p5/8/8/3P4/PPPKPPPP/RNBQ1BNR b KQkq - 0 1");
+
+            // d8a5
+            //board.ParseFen("rnb1kbnr/pp1ppppp/2p5/q7/8/3P4/PPPKPPPP/RNBQ1BNR w KQkq - 0 1");
+
+            var perft = new Perft(board);
+            perft.RunWithCounts(5);
+            Console.WriteLine(perft.LeafNodes);
+
+            //board.GeneratePieceLists();
+            //board.GenerateMoves();
+            //Console.WriteLine(board);
+
+            //var m = new Move(new Pawn{Square = 34, Color = Color.White}, 44);
+
+            //board.MakeMove(m);
+            //Console.WriteLine(board);
+
+            //board.TakeMove();
+            //Console.WriteLine(board);
             //Console.WriteLine(board.Moves.Count + " moves");
             //foreach (var move in board.Moves)
             //{

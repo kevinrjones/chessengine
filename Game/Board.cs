@@ -16,6 +16,10 @@ namespace Game
             CountOfEachPiece = new int[12];
             ActivePieces = new List<Piece>();
             ResetBoard();
+            for (int listNdx = 0; listNdx < Lookups.MaxDepth; listNdx++)
+            {
+                Moves[listNdx] = new List<Move>();
+            }
         }
 
         private readonly ZobristHashing _hashing = new ZobristHashing();
@@ -111,10 +115,9 @@ namespace Game
             HashPiece(from);
             RemovePieceFromPieceList(from);
 
-
             // set square to empty            
             Squares[from.Square] = new EmptyPiece { Square = from.Square };
-            
+
             // add piece to board
             var to = from.Clone();
             to.Square = toSquare;
@@ -135,7 +138,14 @@ namespace Game
             // store current side so we can check king attack later
             Color currentSide = SideToMove;
             // add poskey to history array
-            var history = new History { PositionKey = PositionKey, Move = move, EnPassantSquare = EnPassantSquare, CastlePermissions = CastlePermission, FiftyMoveCount = FiftyMoveCount };
+            var history = new History
+            {
+                PositionKey = PositionKey,
+                Move = move,
+                EnPassantSquare = EnPassantSquare,
+                CastlePermissions = CastlePermission,
+                FiftyMoveCount = FiftyMoveCount
+            };
             History.Add(history);
 
             // check enpas capture - if so then remove pawn one rank up ClearPiece(to +- 10)
@@ -166,7 +176,6 @@ namespace Game
 
             UpdateDetailsIfPawnMove(move);
 
-
             MovePiece(move.PieceToMove, move.ToSquare);
 
             PromotePiece(move);
@@ -177,7 +186,7 @@ namespace Game
             // hash side
             HashSide();
 
-            
+
             var king = GetSideToMovesKing(currentSide);
 
             if (IsSideThatIsMovingsKingAttacked(king))
@@ -192,12 +201,16 @@ namespace Game
 
         private bool IsSideThatIsMovingsKingAttacked(King king)
         {
-            return IsAttacked(king.Square, SideToMove);
+            return IsSquareAttacked(king.Square, SideToMove);
         }
 
         private King GetSideToMovesKing(Color currentSide)
         {
-            var king = KingPieceList[0].Color == currentSide ? KingPieceList[0] : KingPieceList[1];
+            King king = KingPieceList[0];
+            if (KingPieceList.Count == 2)
+            {
+                king = KingPieceList[0].Color == currentSide ? KingPieceList[0] : KingPieceList[1];
+            }
             return king;
         }
 
@@ -208,6 +221,7 @@ namespace Game
             Ply--;
 
             History item = History[HistoryPly];
+            History.Remove(item);
             Move move = item.Move;
 
             // hash EP
@@ -244,15 +258,15 @@ namespace Game
             {
                 if (SideToMove == Color.White)
                 {
-                    AddPiece(new Pawn { Square = move.ToSquare + 10, Color = Color.Black });
+                    AddPiece(new Pawn { Square = move.ToSquare - 10, Color = Color.Black });
                 }
                 else
                 {
-                    AddPiece(new Pawn { Square = move.ToSquare - 10, Color = Color.White });
+                    AddPiece(new Pawn { Square = move.ToSquare + 10, Color = Color.White });
                 }
             }
             /* if(castle) put rook back*/
-            if ((item.CastlePermissions & (CastlePermissions)0xFFFF) != 0)
+            if (move.IsCastleMove)
             {
                 Rook rook;
                 switch (move.ToSquare)
@@ -281,7 +295,7 @@ namespace Game
             // piece we're moving back won't be the piece we moved
             // originally, it'll be the promoted piece
             // so grab the piece from the square not from the move
-            var pieceToMove = Squares[move.ToSquare];            
+            var pieceToMove = Squares[move.ToSquare];
             MovePiece(pieceToMove, move.FromSquare);
             // if capture, add piece to 'to' square
 
@@ -298,16 +312,6 @@ namespace Game
                 AddPiece(piece);
             }
 
-        }
-
-        // todo - bitboards really useful here?
-        private bool IsAttacked(int square, Color color)
-        {
-            return IsAttackedByAKing(square, color)
-                   || IsAttackedByAKnight(square, color)
-                   || IsAttackedByPawn(square, color)
-                   || IsSquareAttackedByABishop(square, color)
-                   || IsSquareAttackedByARook(square, color);
         }
 
         private void PromotePiece(Move move)
@@ -329,7 +333,9 @@ namespace Game
                 FiftyMoveCount = 0;
                 if (move.IsPawnStartMove)
                 {
-                    EnPassantSquare = move.PieceToMove.Color == Color.White ? move.FromSquare + 10 : move.FromSquare - 10;
+                    EnPassantSquare = move.PieceToMove.Color == Color.White
+                        ? move.FromSquare + 10
+                        : move.FromSquare - 10;
                     HashEnPassant(EnPassantSquare);
                 }
             }
@@ -430,7 +436,8 @@ namespace Game
                     PawnPieceList.Remove((Pawn)pieceToRemove);
                     break;
                 case PieceType.Rook:
-                    pieceToRemove = RookPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    //                    pieceToRemove = RookPieceList.FirstOrDefault(p => p.Square == piece.Square);
+                    pieceToRemove = RookPieceList.First(p => p.Square == piece.Square);
                     RookPieceList.Remove((Rook)pieceToRemove);
                     break;
                 case PieceType.Knight:
@@ -494,12 +501,13 @@ namespace Game
             var builder = new StringBuilder();
             for (int rank = 7; rank >= 0; rank--)
             {
-                for (int file = 0; file < 7; file++)
+                for (int file = 0; file <= 7; file++)
                 {
                     int boardNdx = Lookups.FileRankToSquare(file, rank);
                     var piece = Squares[boardNdx];
                     builder.Append(piece);
                 }
+                builder.Append("/");
                 builder.Append(Environment.NewLine);
             }
             return builder.ToString();
@@ -587,7 +595,7 @@ namespace Game
         internal readonly List<King> KingPieceList = new List<King>(2);
         internal readonly bool[] EmptySquares = new bool[120];
 
-        public List<Move> Moves = new List<Move>();
+        public List<Move>[] Moves = new List<Move>[Lookups.MaxDepth];
 
         public void GeneratePieceLists()
         {
@@ -667,10 +675,10 @@ namespace Game
             var rank2 = pawn.Square >= 31 && pawn.Square <= 38;
             if (pawn.Color == Color.White)
             {
-                if (EmptySquares[pawn.Square + 10])
+                if (Squares[pawn.Square + 10].Type == PieceType.Empty)
                 {
                     AddPawnMove(pawn, pawn.Square + 10);
-                    if (rank2 && EmptySquares[pawn.Square + 20])
+                    if (rank2 && Squares[pawn.Square + 20].Type == PieceType.Empty)
                     {
                         AddPawnStartMove(pawn, pawn.Square + 20);
                     }
@@ -699,10 +707,10 @@ namespace Game
             }
             if (pawn.Color == Color.Black)
             {
-                if (EmptySquares[pawn.Square - 10])
+                if (Squares[pawn.Square - 10].Type == PieceType.Empty)
                 {
                     AddPawnMove(pawn, pawn.Square - 10);
-                    if (rank7 && EmptySquares[pawn.Square - 20])
+                    if (rank7 && Squares[pawn.Square - 20].Type == PieceType.Empty)
                     {
                         AddQuietMove(pawn, pawn.Square - 20);
                     }
@@ -733,22 +741,22 @@ namespace Game
 
         private void AddPawnStartMove(Pawn pawn, int square)
         {
-            Moves.Add(new Move(pawn, square) { IsPawnStartMove = true });
+            Moves[Ply].Add(new Move(pawn, square) { IsPawnStartMove = true });
         }
 
         private void AddEnPassantMove(Piece piece, int square)
         {
-            Moves.Add(new Move(piece, square) { IsEnPassantCapture = true });
+            Moves[Ply].Add(new Move(piece, square) { IsEnPassantCapture = true });
         }
 
         private void AddCaptureMove(Piece piece, Piece pieceToCapture)
         {
-            Moves.Add(new Move(piece, pieceToCapture));
+            Moves[Ply].Add(new Move(piece, pieceToCapture));
         }
 
         private void AddQuietMove(Piece piece, int to)
         {
-            Moves.Add(new Move(piece, to));
+            Moves[Ply].Add(new Move(piece, to));
         }
 
         private void AddPawnMove(Pawn pawn, int to)
@@ -756,21 +764,21 @@ namespace Game
             if (pawn.Color == Color.White && to >= Lookups.A8 && to <= Lookups.H8)
             {
                 // promoted
-                Moves.Add(new Move(pawn, to, new Queen()));
-                Moves.Add(new Move(pawn, to, new Rook()));
-                Moves.Add(new Move(pawn, to, new Bishop()));
-                Moves.Add(new Move(pawn, to, new Knight()));
+                Moves[Ply].Add(new Move(pawn, to, new Queen()));
+                Moves[Ply].Add(new Move(pawn, to, new Rook()));
+                Moves[Ply].Add(new Move(pawn, to, new Bishop()));
+                Moves[Ply].Add(new Move(pawn, to, new Knight()));
             }
             else if (pawn.Color == Color.Black && to >= Lookups.A1 && to <= Lookups.H1)
             {
-                Moves.Add(new Move(pawn, to, new Queen()));
-                Moves.Add(new Move(pawn, to, new Rook()));
-                Moves.Add(new Move(pawn, to, new Bishop()));
-                Moves.Add(new Move(pawn, to, new Knight()));
+                Moves[Ply].Add(new Move(pawn, to, new Queen()));
+                Moves[Ply].Add(new Move(pawn, to, new Rook()));
+                Moves[Ply].Add(new Move(pawn, to, new Bishop()));
+                Moves[Ply].Add(new Move(pawn, to, new Knight()));
             }
             else
             {
-                Moves.Add(new Move(pawn, to));
+                Moves[Ply].Add(new Move(pawn, to));
             }
         }
 
@@ -890,7 +898,7 @@ namespace Game
             {
                 toSquare = Lookups.G8;
             }
-            Moves.Add(new Move(king, toSquare, true));
+            Moves[Ply].Add(new Move(king, toSquare, true));
         }
 
         private bool IsSquareAttackedByARook(int square, Color side)
@@ -902,8 +910,15 @@ namespace Game
                 var piece = Squares[square + testSquare];
                 while (IsValidAttackingPiece(piece, thisSideColor))
                 {
-                    if (piece.Color == side && piece.Type == PieceType.Rook ||
-                        piece.Color == side && piece.Type == PieceType.Queen) return true;
+                    if (piece.Color == side)
+                    {
+                        if (piece.Type == PieceType.Rook || piece.Type == PieceType.Queen)
+                        {
+                            return true;
+                        }
+                        // piece is the same color but can't attack so blocks anything behind
+                        break;
+                    }
 
                     testSquare += direction;
                     piece = Squares[square + testSquare];
@@ -921,8 +936,15 @@ namespace Game
                 var piece = Squares[square + testSquare];
                 while (IsValidAttackingPiece(piece, thisSideColor))
                 {
-                    if (piece.Color == side && piece.Type == PieceType.Bishop ||
-                        piece.Color == side && piece.Type == PieceType.Queen) return true;
+                    if (piece.Color == side)
+                    {
+                        if (piece.Type == PieceType.Bishop || piece.Type == PieceType.Queen)
+                        {
+                            return true;
+                        }
+                        // piece is the same color but can't attack so blocks anything behind
+                        break;
+                    }
 
                     testSquare += direction;
                     piece = Squares[square + testSquare];
@@ -977,6 +999,7 @@ namespace Game
 
         public void GenerateMoves()
         {
+            Moves[Ply].Clear();
             GenerateMoves(PawnPieceList);
             GenerateMoves(KnightPieceList);
             GenerateMoves(BishopPieceList);
@@ -985,4 +1008,5 @@ namespace Game
             GenerateMoves(KingPieceList);
         }
     }
+
 }

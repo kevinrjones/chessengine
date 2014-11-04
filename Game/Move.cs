@@ -49,12 +49,12 @@ namespace Game
         public override string ToString()
         {
             var move = Lookups.MapSquareToRankFile(PieceToMove.Square) + Lookups.MapSquareToRankFile(ToSquare);
-            if (PromotedTo != null)
+            if (PromotedTo.Type != PieceType.Empty)
             {
                 move += PromotedTo.ToString();
             }
 
-            return move + " (" + PieceToMove.Square + " to " + ToSquare + ")";
+            return move;
         }
     }
 }
