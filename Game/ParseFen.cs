@@ -15,9 +15,9 @@ namespace Game
         {
             _sections = fen.Split('/', ' ');
 
-            if (_sections.Length != 13)
+            if (_sections.Length < 12)
             {
-                throw new ArgumentException("FEN must have 13 sections", "fen");
+                throw new ArgumentException("FEN must have at least 12 sections", "fen");
             }
         }
 

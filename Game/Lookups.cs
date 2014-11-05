@@ -211,6 +211,9 @@ namespace Game
 
         public const int Maxmoves = 2048;
         public const int MaxDepth = 20;
+        //public static Dictionary<string, int> Pieces = new Dictionary<string, int> {{"Empty", 0},}
+
+        //public static int[] PieceCounts = new int [13];
 
     }
 }

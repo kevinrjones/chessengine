@@ -221,7 +221,7 @@ namespace Game
             Ply--;
 
             History item = History[HistoryPly];
-            History.Remove(item);
+            History.RemoveAt(HistoryPly);
             Move move = item.Move;
 
             // hash EP
@@ -429,32 +429,68 @@ namespace Game
 
         private void RemovePieceFromPieceList(Piece piece)
         {
+            Piece pieceToRemove;
             switch (piece.Type)
             {
                 case PieceType.Pawn:
-                    Piece pieceToRemove = PawnPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    PawnPieceList.Remove((Pawn)pieceToRemove);
+                    for (int i = 0; i < PawnPieceList.Count; i++)
+                    {
+                        if (PawnPieceList[i].Square == piece.Square)
+                        {
+                            PawnPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }                    
                     break;
                 case PieceType.Rook:
-                    //                    pieceToRemove = RookPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    pieceToRemove = RookPieceList.First(p => p.Square == piece.Square);
-                    RookPieceList.Remove((Rook)pieceToRemove);
+                    for (int i = 0; i < RookPieceList.Count; i++)
+                    {
+                        if (RookPieceList[i].Square == piece.Square)
+                        {
+                            RookPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     break;
-                case PieceType.Knight:
-                    pieceToRemove = KnightPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    KnightPieceList.Remove((Knight)pieceToRemove);
+                case PieceType.Knight:                    
+                    for (int i = 0; i < KnightPieceList.Count; i++)
+                    {
+                        if (KnightPieceList[i].Square == piece.Square)
+                        {
+                            KnightPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     break;
                 case PieceType.Bishop:
-                    pieceToRemove = BishopPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    BishopPieceList.Remove((Bishop)pieceToRemove);
+                    for (int i = 0; i < BishopPieceList.Count; i++)
+                    {
+                        if (BishopPieceList[i].Square == piece.Square)
+                        {
+                            BishopPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     break;
                 case PieceType.Queen:
-                    pieceToRemove = QueenPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    QueenPieceList.Remove((Queen)pieceToRemove);
+                    for (int i = 0; i < QueenPieceList.Count; i++)
+                    {
+                        if (QueenPieceList[i].Square == piece.Square)
+                        {
+                            QueenPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     break;
                 case PieceType.King:
-                    pieceToRemove = KingPieceList.FirstOrDefault(p => p.Square == piece.Square);
-                    KingPieceList.Remove((King)pieceToRemove);
+                    for (int i = 0; i < KingPieceList.Count; i++)
+                    {
+                        if (KingPieceList[i].Square == piece.Square)
+                        {
+                            KingPieceList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     break;
             }
         }

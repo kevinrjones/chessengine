@@ -31,7 +31,7 @@ namespace Game
         public Color Color { get; set; }
         public bool Slides { get; protected set; }
         public int Value { get; protected set; }
-        public int Square { get; set; }
+        public int Square;
         public abstract Piece Clone();
     }
 

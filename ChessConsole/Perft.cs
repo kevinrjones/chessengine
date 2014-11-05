@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using ChessConsole;
 using Game;
 
 public class Perft
 {
     private readonly Board _board;
+    private readonly IReporter _reporter;
 
-    public Perft(Board board)
+    public Perft(Board board, IReporter reporter)
     {
         _board = board;
+        _reporter = reporter;
     }
 
     public int LeafNodes{ get; set; }
@@ -51,10 +54,9 @@ public class Perft
             _board.TakeMove();
             int oldNodes = LeafNodes - cumalativeNodes;
 
-            Console.WriteLine("move: " + moveNumber + " " + move + " " + oldNodes);
-        }        
-        
-        Console.WriteLine("Test complete " + LeafNodes + " visited"); 
+            _reporter.Report("move: " + moveNumber + " " + move + " " + oldNodes);
+        }
+
+        _reporter.Report("Test complete " + LeafNodes + " visited"); 
     }
 }
-
