@@ -211,9 +211,26 @@ namespace Game
 
         public const int Maxmoves = 2048;
         public const int MaxDepth = 20;
-        //public static Dictionary<string, int> Pieces = new Dictionary<string, int> {{"Empty", 0},}
 
-        //public static int[] PieceCounts = new int [13];
+        public enum Pieces
+        {
+            Empty = 0,
+            wP = 1,
+            wR = 2,
+            wN = 3,
+            wB = 4,
+            wQ = 5,
+            wK = 6,
+            bP = 7,
+            bR = 8,
+            bN = 9,
+            bB = 10,
+            bQ = 11,
+            bK = 12
+
+        }
+
+        public static int[] PieceCounts = new int [13];
 
     }
 }

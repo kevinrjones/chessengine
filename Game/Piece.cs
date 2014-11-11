@@ -37,10 +37,6 @@ namespace Game
 
     public class EmptyPiece : Piece
     {
-        public EmptyPiece()
-        {
-        }
-
         public override string ToString()
         {
             return ".";

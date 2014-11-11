@@ -58,7 +58,7 @@ namespace Game.Test
 
                 board.ClearPiece(board.Squares[21]);
 
-                board.RookPieceList.Count.Should().Be(3);
+                //board.WhiteRookPieceList.Count.Should().Be(3);
             }
         }
 
@@ -116,7 +116,7 @@ namespace Game.Test
                 var rook = new Rook { Square = 21, Color = Color.White };
                 board.AddPiece(rook);
 
-                board.RookPieceList.Count.Should().Be(4);
+                //board.WhiteRookPieceList.Count.Should().Be(4);
             }
         }
 
@@ -180,7 +180,7 @@ namespace Game.Test
                 var to = new Rook { Square = 31, Color = Color.White };
                 board.CastlePiece(from, to);
 
-                board.RookPieceList.Count.Should().Be(4);
+                //board.WhiteRookPieceList.Count.Should().Be(4);
             }
 
             [Test]
@@ -193,7 +193,7 @@ namespace Game.Test
                 var to = new Rook { Square = 31, Color = Color.White };
                 board.CastlePiece(from, to);
 
-                board.RookPieceList.Count.Should().Be(4);
+                //board.WhiteRookPieceList.Count.Should().Be(4);
             }
         }
 

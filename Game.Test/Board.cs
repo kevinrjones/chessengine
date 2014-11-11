@@ -231,7 +231,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.PawnPieceList.Count(p => p.Color == Color.White).Should().Be(8);
+                b.WhitePawnPieceList.Count(p => p.Color == Color.White).Should().Be(8);
+                Game.Lookups.PieceCounts[1].Should().Be(8);
             }
 
             [Test]
@@ -240,7 +241,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.QueenPieceList.Count(p => p.Color == Color.White).Should().Be(1);
+//                b.WhiteQueenPieceList.Count(p => p.Color == Color.White).Should().Be(1);
+                Game.Lookups.PieceCounts[5].Should().Be(1);
             }
 
             [Test]
@@ -250,6 +252,7 @@ namespace Game.Test
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
                 b.KingPieceList.Count(p => p.Color == Color.White).Should().Be(1);
+                Game.Lookups.PieceCounts[6].Should().Be(1);
             }
 
             [Test]
@@ -258,7 +261,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.BishopPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                b.WhiteBishopPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                Game.Lookups.PieceCounts[4].Should().Be(2);
             }
 
             [Test]
@@ -267,7 +271,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.KnightPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                b.WhiteKnightPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                Game.Lookups.PieceCounts[3].Should().Be(2);
             }
 
             [Test]
@@ -276,7 +281,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.RookPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                b.WhiteRookPieceList.Count(p => p.Color == Color.White).Should().Be(2);
+                Game.Lookups.PieceCounts[2].Should().Be(2);
             }
 
             [Test]
@@ -285,7 +291,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.PawnPieceList.Count(p => p.Color == Color.Black).Should().Be(8);
+                b.WhitePawnPieceList.Count(p => p.Color == Color.Black).Should().Be(8);
+                Game.Lookups.PieceCounts[7].Should().Be(8);
             }
 
             [Test]
@@ -294,7 +301,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.QueenPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
+                b.WhiteQueenPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
+                Game.Lookups.PieceCounts[11].Should().Be(1);
             }
 
             [Test]
@@ -304,6 +312,7 @@ namespace Game.Test
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
                 b.KingPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
+                Game.Lookups.PieceCounts[12].Should().Be(1);
             }
 
             [Test]
@@ -312,7 +321,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.BishopPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                b.WhiteBishopPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                Game.Lookups.PieceCounts[10].Should().Be(2);
             }
 
             [Test]
@@ -321,7 +331,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.KnightPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                b.WhiteKnightPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                Game.Lookups.PieceCounts[9].Should().Be(2);
             }
 
             [Test]
@@ -330,7 +341,8 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.RookPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                b.WhiteRookPieceList.Count(p => p.Color == Color.Black).Should().Be(2);
+                Game.Lookups.PieceCounts[8].Should().Be(2);
             }
         }
 
@@ -344,7 +356,7 @@ namespace Game.Test
                     var board = new Game.Board();
                     board.ParseFen(initialBoardSetup);
 
-                    board.GenerateMoves(board.PawnPieceList);
+                    board.GenerateMoves(board.WhitePawnPieceList);
                     board.Moves[board.Ply].Count.Should().Be(16);
                 }
 
@@ -355,7 +367,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.PawnPieceList);
+                board.GenerateMoves(board.WhitePawnPieceList);
                 board.Moves[board.Ply].Count.Should().Be(16);
             }
 
@@ -367,7 +379,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(boardSetup);
 
-                board.GenerateMoves(board.PawnPieceList);
+                board.GenerateMoves(board.WhitePawnPieceList);
                 board.Moves[board.Ply].Count.Should().Be(0);
             }
 
@@ -378,7 +390,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(boardSetup);
 
-                board.GenerateMoves(board.PawnPieceList);
+                board.GenerateMoves(board.WhitePawnPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -389,7 +401,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(boardSetup);
 
-                board.GenerateMoves(board.PawnPieceList);
+                board.GenerateMoves(board.WhitePawnPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -401,7 +413,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(boardSetup);
 
-                board.GenerateMoves(board.PawnPieceList);
+                board.GenerateMoves(board.WhitePawnPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
         }
@@ -416,7 +428,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(0);
             }
 
@@ -427,7 +439,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -438,7 +450,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -449,7 +461,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(14);
             }
 
@@ -460,7 +472,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -471,7 +483,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(7);
             }
 
@@ -482,7 +494,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(14);
             }
 
@@ -493,7 +505,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -504,7 +516,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(7);
             }
 
@@ -515,7 +527,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.RookPieceList);
+                board.GenerateMoves(board.WhiteRookPieceList);
                 board.Moves[board.Ply].Count.Should().Be(14);
             }
 
@@ -531,7 +543,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.BishopPieceList);
+                board.GenerateMoves(board.WhiteBishopPieceList);
                 board.Moves[board.Ply].Count.Should().Be(0);
             }
 
@@ -542,7 +554,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.BishopPieceList);
+                board.GenerateMoves(board.WhiteBishopPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -553,7 +565,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.BishopPieceList);
+                board.GenerateMoves(board.WhiteBishopPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -564,7 +576,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.BishopPieceList);
+                board.GenerateMoves(board.WhiteBishopPieceList);
                 board.Moves[board.Ply].Count.Should().Be(13);
             }
 
@@ -575,7 +587,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.BishopPieceList);
+                board.GenerateMoves(board.WhiteBishopPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -592,7 +604,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -604,7 +616,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
 
@@ -616,7 +628,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply][0].PieceToMove.Square.Should().Be(92);
                 board.Moves[board.Ply][1].PieceToMove.Square.Should().Be(92);
             }
@@ -630,7 +642,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply][0].PieceToMove.Square.Should().Be(92);
                 board.Moves[board.Ply][0].ToSquare.Should().Be(73);
                 board.Moves[board.Ply][1].ToSquare.Should().Be(71);
@@ -644,7 +656,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply].Count.Should().Be(4);
             }
 
@@ -656,7 +668,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply].Count.Should().Be(8);
             }
 
@@ -669,7 +681,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KnightPieceList);
+                board.GenerateMoves(board.WhiteKnightPieceList);
                 board.Moves[board.Ply].Count.Should().Be(8);
             }
         }
@@ -684,7 +696,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.QueenPieceList);
+                board.GenerateMoves(board.WhiteQueenPieceList);
                 board.Moves[board.Ply].Count.Should().Be(0);
             }
 
@@ -695,7 +707,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.QueenPieceList);
+                board.GenerateMoves(board.WhiteQueenPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
 
@@ -706,7 +718,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.QueenPieceList);
+                board.GenerateMoves(board.WhiteQueenPieceList);
                 board.Moves[board.Ply].Count.Should().Be(8);
             }
 
@@ -717,7 +729,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.QueenPieceList);
+                board.GenerateMoves(board.WhiteQueenPieceList);
                 board.Moves[board.Ply].Count.Should().Be(27);
             }
 
@@ -728,7 +740,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.QueenPieceList);
+                board.GenerateMoves(board.WhiteQueenPieceList);
                 board.Moves[board.Ply].Count.Should().Be(1);
             }
         }

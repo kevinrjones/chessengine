@@ -11,7 +11,7 @@ namespace ChessConsole
 {
     class Program
     {
-        const bool Trace = true;
+        const bool Trace = false;
         static void Main(string[] args)
         {
             var stream = new StreamReader(new FileStream("../../perfsuite.epd", FileMode.Open));
@@ -22,7 +22,7 @@ namespace ChessConsole
             Stopwatch timer = new Stopwatch();
             while ((perftEntry = stream.ReadLine()) != null)
             {
-                depth = 5;
+                depth = 1;
                 var entries = perftEntry.Split(';');
                 fen = entries[0];
 
@@ -36,7 +36,6 @@ namespace ChessConsole
                     board.ParseFen(fen);
 
                     var perft = new Perft(board, new ConsoleReporter());
-//                    perft.Run(4);
                     perft.Run(depth);
                     timer.Stop();
                     Console.WriteLine("expected {0}, returned {1} in {2}", count, perft.LeafNodes, timer.Elapsed);

@@ -429,57 +429,163 @@ namespace Game
 
         private void RemovePieceFromPieceList(Piece piece)
         {
-            Piece pieceToRemove;
+            int pieceNum;
+            int count;
             switch (piece.Type)
             {
                 case PieceType.Pawn:
-                    for (int i = 0; i < PawnPieceList.Count; i++)
+                    switch (piece.Color)
                     {
-                        if (PawnPieceList[i].Square == piece.Square)
-                        {
-                            PawnPieceList.RemoveAt(i);
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bP;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackPawnPieceList[i].Square == piece.Square)
+                                {
+                                    BlackPawnPieceList[i] = BlackPawnPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
-                    }                    
-                    break;
-                case PieceType.Rook:
-                    for (int i = 0; i < RookPieceList.Count; i++)
-                    {
-                        if (RookPieceList[i].Square == piece.Square)
-                        {
-                            RookPieceList.RemoveAt(i);
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wP;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhitePawnPieceList[i].Square == piece.Square)
+                                {
+                                    WhitePawnPieceList[i] = WhitePawnPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
                     }
                     break;
-                case PieceType.Knight:                    
-                    for (int i = 0; i < KnightPieceList.Count; i++)
+                case PieceType.Rook:
+                    switch (piece.Color)
                     {
-                        if (KnightPieceList[i].Square == piece.Square)
-                        {
-                            KnightPieceList.RemoveAt(i);
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bR;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackRookPieceList[i].Square == piece.Square)
+                                {
+                                    BlackRookPieceList[i] = BlackRookPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wR;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhiteRookPieceList[i].Square == piece.Square)
+                                {
+                                    WhiteRookPieceList[i] = WhiteRookPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                case PieceType.Knight:
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bN;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackKnightPieceList[i].Square == piece.Square)
+                                {
+                                    BlackKnightPieceList[i] = BlackKnightPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wN;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhiteKnightPieceList[i].Square == piece.Square)
+                                {
+                                    WhiteKnightPieceList[i] = WhiteKnightPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
                     }
                     break;
                 case PieceType.Bishop:
-                    for (int i = 0; i < BishopPieceList.Count; i++)
+                    switch (piece.Color)
                     {
-                        if (BishopPieceList[i].Square == piece.Square)
-                        {
-                            BishopPieceList.RemoveAt(i);
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bB;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackBishopPieceList[i].Square == piece.Square)
+                                {
+                                    BlackBishopPieceList[i] = BlackBishopPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wB;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhiteBishopPieceList[i].Square == piece.Square)
+                                {
+                                    WhiteBishopPieceList[i] = WhiteBishopPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
                     }
                     break;
                 case PieceType.Queen:
-                    for (int i = 0; i < QueenPieceList.Count; i++)
+                    switch (piece.Color)
                     {
-                        if (QueenPieceList[i].Square == piece.Square)
-                        {
-                            QueenPieceList.RemoveAt(i);
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bQ;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackQueenPieceList[i].Square == piece.Square)
+                                {
+                                    BlackQueenPieceList[i] = BlackQueenPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wQ;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhiteQueenPieceList[i].Square == piece.Square)
+                                {
+                                    WhiteQueenPieceList[i] = WhiteQueenPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
                     }
                     break;
                 case PieceType.King:
@@ -497,25 +603,88 @@ namespace Game
 
         private void AddPieceToPieceList(Piece piece)
         {
+            int pieceNum;
             switch (piece.Type)
             {
                 case PieceType.Pawn:
-                    PawnPieceList.Add((Pawn)piece);
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bP;
+                            BlackPawnPieceList[Lookups.PieceCounts[pieceNum]] = ((Pawn)piece);
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wP;
+                            WhitePawnPieceList[Lookups.PieceCounts[pieceNum]] = ((Pawn)piece);
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
                 case PieceType.Rook:
-                    RookPieceList.Add((Rook)piece);
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bR;
+                            BlackRookPieceList[Lookups.PieceCounts[pieceNum]] = ((Rook)piece);
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wR;
+                            WhiteRookPieceList[Lookups.PieceCounts[pieceNum]] = ((Rook)piece);
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
                 case PieceType.Knight:
-                    KnightPieceList.Add((Knight)piece);
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bN;
+                            BlackKnightPieceList[Lookups.PieceCounts[pieceNum]] = (Knight)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wN;
+                            WhiteKnightPieceList[Lookups.PieceCounts[pieceNum]] = (Knight)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
                 case PieceType.Bishop:
-                    BishopPieceList.Add((Bishop)piece);
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bB;
+                            BlackBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop) piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wB;
+                            WhiteBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop) piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
                 case PieceType.Queen:
-                    QueenPieceList.Add((Queen)piece);
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bQ;
+                            BlackQueenPieceList[Lookups.PieceCounts[pieceNum]] = (Queen)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wQ;
+                            WhiteQueenPieceList[Lookups.PieceCounts[pieceNum]] = (Queen)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
                 case PieceType.King:
                     KingPieceList.Add((King)piece);
+                    pieceNum = piece.Color == Color.Black ? (int)Lookups.Pieces.bK : (int)Lookups.Pieces.wK;
+                    Lookups.PieceCounts[pieceNum]++;
                     break;
             }
         }
@@ -623,12 +792,21 @@ namespace Game
             return false;
         }
 
-        internal readonly List<Pawn> PawnPieceList = new List<Pawn>(16);
-        internal readonly List<Rook> RookPieceList = new List<Rook>(4);
-        internal readonly List<Knight> KnightPieceList = new List<Knight>(4);
-        internal readonly List<Bishop> BishopPieceList = new List<Bishop>(4);
-        internal readonly List<Queen> QueenPieceList = new List<Queen>(4);
+        //        internal readonly List<Pawn> WhitePawnPieceList = new List<Pawn>(8);
+        internal readonly Pawn[] WhitePawnPieceList = new Pawn[10];
+        internal readonly Pawn[] BlackPawnPieceList = new Pawn[16];
+        internal readonly Rook[] WhiteRookPieceList = new Rook[20];
+        internal readonly Rook[] BlackRookPieceList = new Rook[20];
+        internal readonly Knight[] WhiteKnightPieceList = new Knight[14];
+        internal readonly Knight[] BlackKnightPieceList = new Knight[14];
+        internal readonly Bishop[] WhiteBishopPieceList = new Bishop[20];
+        internal readonly Bishop[] BlackBishopPieceList = new Bishop[20];
+        internal readonly Queen[] WhiteQueenPieceList = new Queen[20];
+        internal readonly Queen[] BlackQueenPieceList = new Queen[20];
         internal readonly List<King> KingPieceList = new List<King>(2);
+        //internal readonly List<Bishop> BishopPieceList = new List<Bishop>(4);
+        //internal readonly List<Queen> QueenPieceList = new List<Queen>(4);
+        //internal readonly List<King> KingPieceList = new List<King>(2);
         internal readonly bool[] EmptySquares = new bool[120];
 
         public List<Move>[] Moves = new List<Move>[Lookups.MaxDepth];
@@ -640,6 +818,11 @@ namespace Game
                 EmptySquares[0] = false;
             }
 
+            for (int i = 0; i < 13; i++)
+            {
+                Lookups.PieceCounts[i] = 0;
+            }
+
             for (var square = 0; square < Squares.Length; square++)
             {
                 var piece = Squares[square];
@@ -647,32 +830,141 @@ namespace Game
                 {
                     EmptySquares[square] = true;
                 }
+                int pieceNum;
                 switch (piece.Type)
                 {
                     case PieceType.Empty:
                         EmptySquares[square] = true;
                         break;
                     case PieceType.Pawn:
-                        PawnPieceList.Add((Pawn)piece);
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bP;
+                                BlackPawnPieceList[Lookups.PieceCounts[pieceNum]] = (Pawn)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wP;
+                                WhitePawnPieceList[Lookups.PieceCounts[pieceNum]] = (Pawn)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                     case PieceType.Rook:
-                        RookPieceList.Add((Rook)piece);
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bR;
+                                BlackRookPieceList[Lookups.PieceCounts[pieceNum]] = (Rook)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wR;
+                                WhiteRookPieceList[Lookups.PieceCounts[pieceNum]] = (Rook)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                     case PieceType.Knight:
-                        KnightPieceList.Add((Knight)piece);
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bN;
+                                BlackKnightPieceList[Lookups.PieceCounts[pieceNum]] = (Knight)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wN;
+                                WhiteKnightPieceList[Lookups.PieceCounts[pieceNum]] = (Knight)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                     case PieceType.Bishop:
-                        BishopPieceList.Add((Bishop)piece);
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bB;
+                                BlackBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wB;
+                                WhiteBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                     case PieceType.Queen:
-                        QueenPieceList.Add((Queen)piece);
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bQ;
+                                BlackQueenPieceList[Lookups.PieceCounts[pieceNum]] = (Queen)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wQ;
+                                WhiteQueenPieceList[Lookups.PieceCounts[pieceNum]] = (Queen)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                     case PieceType.King:
                         KingPieceList.Add((King)piece);
+                        pieceNum = piece.Color == Color.Black ? (int)Lookups.Pieces.bK : (int)Lookups.Pieces.wK;
+                        Lookups.PieceCounts[pieceNum]++;
                         break;
                 }
             }
         }
+
+        public void GenerateMoves(IList<Pawn> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GeneratePawnMoves(piece);
+            }
+        }
+
+        public void GenerateMoves(IList<Rook> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GenerateSlidingPieceMoves((Rook)piece, Rook.MoveDirection);
+            }
+        }
+
+        public void GenerateMoves(IList<Knight> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GenerateNonSlidingPieceMoves(piece, Knight.MoveDirection);
+            }
+        }
+
+        public void GenerateMoves(IList<Bishop> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GenerateSlidingPieceMoves(piece, Bishop.MoveDirection);
+            }
+        }
+
+        public void GenerateMoves(IList<Queen> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GenerateSlidingPieceMoves(piece, Queen.MoveDirection);
+            }
+        }
+
 
         public void GenerateMoves(IEnumerable<Piece> pieceList)
         {
@@ -1006,10 +1298,11 @@ namespace Game
 
         private bool IsAttackedByAKnight(int square, Color side)
         {
-            foreach (var direction in Knight.MoveDirection)
+            for (int i = 0; i < Knight.MoveDirection.Length; i++)
             {
-                var piece = Squares[square + direction];
+                var piece = Squares[square + Knight.MoveDirection[i]];
                 if (piece.Color == side && piece.Type == PieceType.Knight) return true;
+                
             }
             return false;
         }
@@ -1035,12 +1328,55 @@ namespace Game
 
         public void GenerateMoves()
         {
+            int pieceNdx;
+            int pieceCount;
             Moves[Ply].Clear();
-            GenerateMoves(PawnPieceList);
-            GenerateMoves(KnightPieceList);
-            GenerateMoves(BishopPieceList);
-            GenerateMoves(RookPieceList);
-            GenerateMoves(QueenPieceList);
+
+            if (SideToMove == Color.White)
+            {
+
+                pieceNdx = (int)Lookups.Pieces.wP;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhitePawnPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wR;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhiteRookPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wN;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhiteKnightPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wB;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhiteBishopPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wQ;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhiteQueenPieceList, pieceCount);
+            }
+            else
+            {
+                pieceNdx = (int)Lookups.Pieces.bP;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackPawnPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.bR;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackRookPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.bN;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackKnightPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.bB;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackBishopPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.bQ;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackQueenPieceList, pieceCount);
+            }
             GenerateMoves(KingPieceList);
         }
     }
