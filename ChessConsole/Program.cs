@@ -14,53 +14,48 @@ namespace ChessConsole
         const bool Trace = false;
         static void Main(string[] args)
         {
-            var stream = new StreamReader(new FileStream("../../perfsuite.epd", FileMode.Open));
-            string fen;
-            int count;
-            int depth;
-            string perftEntry;
-            Stopwatch timer = new Stopwatch();
-            while ((perftEntry = stream.ReadLine()) != null)
+            using (var stream = new StreamReader(new FileStream("../../perfsuite.epd", FileMode.Open)))
             {
-                depth = 1;
-                var entries = perftEntry.Split(';');
-                fen = entries[0];
-
-                while (depth <= 6)
+                string fen;
+                int count;
+                int depth;
+                string perftEntry;
+                Stopwatch timer = new Stopwatch();
+                while ((perftEntry = stream.ReadLine()) != null)
                 {
-                    int.TryParse(entries[depth].Split(' ')[1], out count);
+                    depth = 1;
+                    var entries = perftEntry.Split(';');
+                    fen = entries[0];
 
-                    timer.Start();
-                    Console.WriteLine("Running with Fen {0} at depth {1}", fen, depth);
-                    var board = new Board();
-                    board.ParseFen(fen);
+                    while (depth <= 5)
+                    {
+                        int.TryParse(entries[depth].Split(' ')[1], out count);
 
-                    var perft = new Perft(board, new ConsoleReporter());
-                    perft.Run(depth);
-                    timer.Stop();
-                    Console.WriteLine("expected {0}, returned {1} in {2}", count, perft.LeafNodes, timer.Elapsed);
-                    Console.WriteLine("=============================================================");
-                    depth++;
+                        timer.Start();
+                        Console.WriteLine("Running with Fen {0} at depth {1}", fen, depth);
+                        var board = new Board();
+                        board.ParseFen(fen);
+
+                        var perft = new Perft(board, new ConsoleReporter());
+                        perft.Run(depth);
+                        timer.Stop();
+                        if (count == perft.LeafNodes)
+                        {
+                            Console.WriteLine("expected {0}, returned {1} in {2}", count, perft.LeafNodes, timer.Elapsed);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("expected {0}, returned {1} in {2}", count, perft.LeafNodes, timer.Elapsed);
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        Console.WriteLine("=============================================================");
+                        depth++;
+                        if (Trace) break;
+                    }
                     if (Trace) break;
                 }
-                if (Trace) break;
             }
-            //board.GeneratePieceLists();
-            //board.GenerateMoves();
-            //Console.WriteLine(board);
-
-            //var m = new Move(new Pawn{Square = 34, Color = Color.White}, 44);
-
-            //board.MakeMove(m);
-            //Console.WriteLine(board);
-
-            //board.TakeMove();
-            //Console.WriteLine(board);
-            //Console.WriteLine(board.Moves.Count + " moves");
-            //foreach (var move in board.Moves)
-            //{
-            //    Console.WriteLine(move);
-            //}
         }
     }
 

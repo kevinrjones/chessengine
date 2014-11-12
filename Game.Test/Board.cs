@@ -251,7 +251,7 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupWhiteToMove);
 
-                b.KingPieceList.Count(p => p.Color == Color.White).Should().Be(1);
+//                b.WhiteKingPieceList.Count(p => p.Color == Color.White).Should().Be(1);
                 Game.Lookups.PieceCounts[6].Should().Be(1);
             }
 
@@ -311,7 +311,7 @@ namespace Game.Test
                 var b = new Game.Board();
                 b.ParseFen(InitialBoardSetupBlackToMove);
 
-                b.KingPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
+                b.WhiteKingPieceList.Count(p => p.Color == Color.Black).Should().Be(1);
                 Game.Lookups.PieceCounts[12].Should().Be(1);
             }
 
@@ -755,7 +755,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(0);
             }
 
@@ -766,7 +766,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(8);
             }
 
@@ -777,7 +777,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(8);
             }
 
@@ -790,7 +790,7 @@ namespace Game.Test
                                          CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
 
@@ -803,7 +803,7 @@ namespace Game.Test
                                          CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
 
@@ -816,7 +816,7 @@ namespace Game.Test
                                          CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
 
@@ -829,7 +829,7 @@ namespace Game.Test
                                          CastlePermissions.BlackKing | CastlePermissions.BlackQueen;
                 board.ParseFen(initialBoardSetup);
 
-                board.GenerateMoves(board.KingPieceList);
+                board.GenerateMoves(board.WhiteKingPieceList);
                 board.Moves[board.Ply].Count.Should().Be(2);
             }
 

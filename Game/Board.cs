@@ -206,12 +206,7 @@ namespace Game
 
         private King GetSideToMovesKing(Color currentSide)
         {
-            King king = KingPieceList[0];
-            if (KingPieceList.Count == 2)
-            {
-                king = KingPieceList[0].Color == currentSide ? KingPieceList[0] : KingPieceList[1];
-            }
-            return king;
+            return currentSide == Color.White ? WhiteKingPieceList[0] : BlackKingPieceList[0];
         }
 
         internal void TakeMove()
@@ -589,13 +584,34 @@ namespace Game
                     }
                     break;
                 case PieceType.King:
-                    for (int i = 0; i < KingPieceList.Count; i++)
+                    switch (piece.Color)
                     {
-                        if (KingPieceList[i].Square == piece.Square)
-                        {
-                            KingPieceList.RemoveAt(i);
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bK;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (BlackKingPieceList[i].Square == piece.Square)
+                                {
+                                    BlackKingPieceList[i] = BlackKingPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
                             break;
-                        }
+                        case Color.White:
+                            pieceNum = (int) Lookups.Pieces.wK;
+                            count = Lookups.PieceCounts[pieceNum];
+                            for (int i = 0; i < count; i++)
+                            {
+                                if (WhiteKingPieceList[i].Square == piece.Square)
+                                {
+                                    WhiteKingPieceList[i] = WhiteKingPieceList[count - 1];
+                                    Lookups.PieceCounts[pieceNum]--;
+                                    break;
+                                }
+                            }
+                            break;
                     }
                     break;
             }
@@ -682,9 +698,19 @@ namespace Game
                     }
                     break;
                 case PieceType.King:
-                    KingPieceList.Add((King)piece);
-                    pieceNum = piece.Color == Color.Black ? (int)Lookups.Pieces.bK : (int)Lookups.Pieces.wK;
-                    Lookups.PieceCounts[pieceNum]++;
+                    switch (piece.Color)
+                    {
+                        case Color.Black:
+                            pieceNum = (int)Lookups.Pieces.bK;
+                            BlackKingPieceList[Lookups.PieceCounts[pieceNum]] = (King)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                        case Color.White:
+                            pieceNum = (int)Lookups.Pieces.wK;
+                            WhiteKingPieceList[Lookups.PieceCounts[pieceNum]] = (King)piece;
+                            Lookups.PieceCounts[pieceNum]++;
+                            break;
+                    }
                     break;
             }
         }
@@ -792,7 +818,6 @@ namespace Game
             return false;
         }
 
-        //        internal readonly List<Pawn> WhitePawnPieceList = new List<Pawn>(8);
         internal readonly Pawn[] WhitePawnPieceList = new Pawn[10];
         internal readonly Pawn[] BlackPawnPieceList = new Pawn[16];
         internal readonly Rook[] WhiteRookPieceList = new Rook[20];
@@ -803,10 +828,9 @@ namespace Game
         internal readonly Bishop[] BlackBishopPieceList = new Bishop[20];
         internal readonly Queen[] WhiteQueenPieceList = new Queen[20];
         internal readonly Queen[] BlackQueenPieceList = new Queen[20];
-        internal readonly List<King> KingPieceList = new List<King>(2);
-        //internal readonly List<Bishop> BishopPieceList = new List<Bishop>(4);
-        //internal readonly List<Queen> QueenPieceList = new List<Queen>(4);
-        //internal readonly List<King> KingPieceList = new List<King>(2);
+        internal readonly King[] WhiteKingPieceList = new King[10];
+        internal readonly King[] BlackKingPieceList = new King[10];
+
         internal readonly bool[] EmptySquares = new bool[120];
 
         public List<Move>[] Moves = new List<Move>[Lookups.MaxDepth];
@@ -912,9 +936,19 @@ namespace Game
                         }
                         break;
                     case PieceType.King:
-                        KingPieceList.Add((King)piece);
-                        pieceNum = piece.Color == Color.Black ? (int)Lookups.Pieces.bK : (int)Lookups.Pieces.wK;
-                        Lookups.PieceCounts[pieceNum]++;
+                        switch (piece.Color)
+                        {
+                            case Color.Black:
+                                pieceNum = (int)Lookups.Pieces.bK;
+                                BlackKingPieceList[Lookups.PieceCounts[pieceNum]] = (King)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                            case Color.White:
+                                pieceNum = (int)Lookups.Pieces.wK;
+                                WhiteKingPieceList[Lookups.PieceCounts[pieceNum]] = (King)piece;
+                                Lookups.PieceCounts[pieceNum]++;
+                                break;
+                        }
                         break;
                 }
             }
@@ -965,6 +999,14 @@ namespace Game
             }
         }
 
+        public void GenerateMoves(IList<King> pieceList, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var piece = pieceList[i];
+                GenerateNonSlidingPieceMoves(piece, King.MoveDirection);
+            }
+        }
 
         public void GenerateMoves(IEnumerable<Piece> pieceList)
         {
@@ -1171,7 +1213,7 @@ namespace Game
                     AddCastleMove(king, CastlePermissions.WhiteQueen);
                 }
 
-                if (CanCastle(CastlePermissions.WhiteKing, new[] { Lookups.F1, Lookups.G1 }, Color.Black))
+                if (CanCastle(CastlePermissions.WhiteKing, new[] { Lookups.G1, Lookups.F1 }, Color.Black))
                 {
                     AddCastleMove(king, CastlePermissions.WhiteKing);
                 }
@@ -1183,24 +1225,26 @@ namespace Game
                     AddCastleMove(king, CastlePermissions.BlackQueen);
                 }
 
-                if (CanCastle(CastlePermissions.BlackKing, new[] { Lookups.F8, Lookups.G8 }, Color.White))
+                if (CanCastle(CastlePermissions.BlackKing, new[] { Lookups.G8, Lookups.F8 }, Color.White))
                 {
                     AddCastleMove(king, CastlePermissions.BlackKing);
                 }
             }
         }
 
-        private bool CanCastle(CastlePermissions permission, IEnumerable<int> squaresToCheck, Color colorToCheck)
+        private bool CanCastle(CastlePermissions permission, IList<int> squaresToCheck, Color colorToCheck)
         {
             var canCastle = false;
             if ((CastlePermission & permission) > 0)
             {
                 canCastle = true;
-                foreach (var ndx in squaresToCheck)
+                for (int square = 0; square < squaresToCheck.Count; square++)
                 {
-                    if (Squares[ndx].Type != PieceType.Empty || IsSquareAttacked(ndx, colorToCheck))
+                    int ndx = squaresToCheck[square];
+                    if (Squares[ndx].Type != PieceType.Empty || (square > 0 && IsSquareAttacked(ndx, colorToCheck)))
                     {
                         canCastle = false;
+                        break;
                     }
                 }
             }
@@ -1354,6 +1398,10 @@ namespace Game
                 pieceNdx = (int)Lookups.Pieces.wQ;
                 pieceCount = Lookups.PieceCounts[pieceNdx];
                 GenerateMoves(WhiteQueenPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wK;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(WhiteKingPieceList, pieceCount);
             }
             else
             {
@@ -1376,8 +1424,12 @@ namespace Game
                 pieceNdx = (int)Lookups.Pieces.bQ;
                 pieceCount = Lookups.PieceCounts[pieceNdx];
                 GenerateMoves(BlackQueenPieceList, pieceCount);
+
+                pieceNdx = (int)Lookups.Pieces.wK;
+                pieceCount = Lookups.PieceCounts[pieceNdx];
+                GenerateMoves(BlackKingPieceList, pieceCount);
             }
-            GenerateMoves(KingPieceList);
+            
         }
     }
 
