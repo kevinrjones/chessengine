@@ -600,7 +600,7 @@ namespace Game
                             }
                             break;
                         case Color.White:
-                            pieceNum = (int) Lookups.Pieces.wK;
+                            pieceNum = (int)Lookups.Pieces.wK;
                             count = Lookups.PieceCounts[pieceNum];
                             for (int i = 0; i < count; i++)
                             {
@@ -672,12 +672,12 @@ namespace Game
                     {
                         case Color.Black:
                             pieceNum = (int)Lookups.Pieces.bB;
-                            BlackBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop) piece;
+                            BlackBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop)piece;
                             Lookups.PieceCounts[pieceNum]++;
                             break;
                         case Color.White:
                             pieceNum = (int)Lookups.Pieces.wB;
-                            WhiteBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop) piece;
+                            WhiteBishopPieceList[Lookups.PieceCounts[pieceNum]] = (Bishop)piece;
                             Lookups.PieceCounts[pieceNum]++;
                             break;
                     }
@@ -1121,7 +1121,33 @@ namespace Game
 
         private void AddCaptureMove(Piece piece, Piece pieceToCapture)
         {
-            Moves[Ply].Add(new Move(piece, pieceToCapture));
+            if (piece.Type == PieceType.Pawn)
+            {
+                int to = pieceToCapture.Square;
+                if (piece.Color == Color.White && to >= Lookups.A8 && to <= Lookups.H8)
+                {
+                    // promoted
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Queen()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Rook()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Bishop()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Knight()));
+                }
+                else if (piece.Color == Color.Black && to >= Lookups.A1 && to <= Lookups.H1)
+                {
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Queen()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Rook()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Bishop()));
+                    Moves[Ply].Add(new Move(piece, pieceToCapture, new Knight()));
+                }
+                else
+                {
+                    Moves[Ply].Add(new Move(piece, pieceToCapture));
+                }
+            }
+            else
+            {
+                Moves[Ply].Add(new Move(piece, pieceToCapture));
+            }
         }
 
         private void AddQuietMove(Piece piece, int to)
@@ -1198,7 +1224,8 @@ namespace Game
                     }
                 }
             }
-            if (piece.Type == PieceType.King)
+            Color attackColor = piece.Color == Color.White ? Color.Black : Color.White;
+            if (piece.Type == PieceType.King && !IsSquareAttacked(piece.Square, attackColor))
             {
                 GenerateCastlingMoves((King)piece);
             }
@@ -1346,7 +1373,7 @@ namespace Game
             {
                 var piece = Squares[square + Knight.MoveDirection[i]];
                 if (piece.Color == side && piece.Type == PieceType.Knight) return true;
-                
+
             }
             return false;
         }
@@ -1429,7 +1456,7 @@ namespace Game
                 pieceCount = Lookups.PieceCounts[pieceNdx];
                 GenerateMoves(BlackKingPieceList, pieceCount);
             }
-            
+
         }
     }
 

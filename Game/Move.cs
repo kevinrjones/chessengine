@@ -26,6 +26,16 @@ namespace Game
             Captured = pieceToCapture;
         }
 
+        public Move(Piece piece, Piece pieceToCapture, Piece promotedTo)
+        {
+            PieceToMove = piece;
+            ToSquare = pieceToCapture.Square;
+            Captured = pieceToCapture;
+            PromotedTo = promotedTo;
+            PromotedTo.Color = piece.Color;
+            PromotedTo.Square = ToSquare;
+        }
+
         public Move(Piece piece, int toSquare, Piece promotedTo)
         {
             PieceToMove = piece;

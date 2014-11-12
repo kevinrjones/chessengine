@@ -23,7 +23,7 @@ namespace ChessConsole
                 Stopwatch timer = new Stopwatch();
                 while ((perftEntry = stream.ReadLine()) != null)
                 {
-                    depth = 1;
+                    depth = 3;
                     var entries = perftEntry.Split(';');
                     fen = entries[0];
 
