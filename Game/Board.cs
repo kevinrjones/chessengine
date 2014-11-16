@@ -84,11 +84,11 @@ namespace Game
             // hash piece
             HashPiece(piece);
             // add piece to board
-            Squares[piece.Square] = piece.Clone();
+            Squares[piece.Square] = piece;
             // update material
             Material[(int)SideToMove] += piece.Value;
             // update piece list
-            AddPieceToPieceList(piece.Clone());
+            AddPieceToPieceList(piece);
         }
 
         internal void CastlePiece(Piece from, Rook to)
@@ -122,14 +122,12 @@ namespace Game
             var to = from.Clone();
             to.Square = toSquare;
 
-            //from.Square = toSquare;
-
             Squares[toSquare] = to;
 
             // hash piece in
             HashPiece(to);
             // update the piece list            
-            AddPieceToPieceList(to.Clone());
+            AddPieceToPieceList(to);
         }
 
 
@@ -812,8 +810,8 @@ namespace Game
             if (IsAttackedByPawn(square, side)) return true;
             if (IsAttackedByAKnight(square, side)) return true;
             if (IsAttackedByAKing(square, side)) return true;
-            if (IsSquareAttackedByARook(square, side)) return true;
             if (IsSquareAttackedByABishop(square, side)) return true;
+            if (IsSquareAttackedByARook(square, side)) return true;
 
             return false;
         }
@@ -1303,8 +1301,9 @@ namespace Game
         private bool IsSquareAttackedByARook(int square, Color side)
         {
             var thisSideColor = side == Color.White ? Color.Black : Color.White;
-            foreach (var direction in Rook.MoveDirection)
+            for (int ndx = 0; ndx < Rook.MoveDirection.Length; ndx++)
             {
+                var direction = Rook.MoveDirection[ndx];
                 var testSquare = direction;
                 var piece = Squares[square + testSquare];
                 while (IsValidAttackingPiece(piece, thisSideColor))
@@ -1329,8 +1328,9 @@ namespace Game
         private bool IsSquareAttackedByABishop(int square, Color side)
         {
             var thisSideColor = side == Color.White ? Color.Black : Color.White;
-            foreach (var direction in Bishop.MoveDirection)
+            for (int ndx = 0; ndx < Bishop.MoveDirection.Length; ndx++)
             {
+                var direction = Bishop.MoveDirection[ndx];
                 var testSquare = direction;
                 var piece = Squares[square + testSquare];
                 while (IsValidAttackingPiece(piece, thisSideColor))
