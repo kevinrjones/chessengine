@@ -270,7 +270,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetupForEnPassantCaptureWhiteToMove);
                 var m = new Move(new Pawn { Square = 64, Color = Color.White }, 73) { IsEnPassantCapture = true };
-                board.Squares[63].Type.Should().Be(PieceType.Pawn);
+                board.Squares[63].Type.Should().Be(PieceType.WhitePawn);
                 board.MakeMove(m);
 
                 board.Squares[63].Type.Should().Be(PieceType.Empty);
@@ -283,7 +283,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetupForEnPassantCaptureWhiteToMove);
                 var m = new Move(new Pawn { Square = 53, Color = Color.Black }, 44) { IsEnPassantCapture = true };
-                board.Squares[54].Type.Should().Be(PieceType.Pawn);
+                board.Squares[54].Type.Should().Be(PieceType.WhitePawn);
                 board.MakeMove(m);
 
                 board.Squares[54].Type.Should().Be(PieceType.Empty);
@@ -297,7 +297,7 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetupForWhiteQueenSideCastle);
                 var m = new Move(new King(), 23, true);
                 board.MakeMove(m);
-                board.Squares[24].Type.Should().Be(PieceType.Rook);
+                board.Squares[24].Type.Should().Be(PieceType.WhiteRook);
             }
 
             [Test]
@@ -319,7 +319,7 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetupForWhiteKingSideCastle);
                 var m = new Move(new King(), 27, true);
                 board.MakeMove(m);
-                board.Squares[26].Type.Should().Be(PieceType.Rook);
+                board.Squares[26].Type.Should().Be(PieceType.WhiteRook);
             }
 
             [Test]
@@ -341,7 +341,7 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetupForWhiteQueenSideCastle);
                 var m = new Move(new King(), 93, true);
                 board.MakeMove(m);
-                board.Squares[94].Type.Should().Be(PieceType.Rook);
+                board.Squares[94].Type.Should().Be(PieceType.WhiteRook);
             }
 
             [Test]
@@ -363,7 +363,7 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetupForWhiteQueenSideCastle);
                 var m = new Move(new King(), 97, true);
                 board.MakeMove(m);
-                board.Squares[96].Type.Should().Be(PieceType.Rook);
+                board.Squares[96].Type.Should().Be(PieceType.WhiteRook);
             }
 
             [Test]
@@ -512,13 +512,13 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetupForWhiteRookMove);
 
-                board.Squares[28].Type.Should().Be(PieceType.Rook);
+                board.Squares[28].Type.Should().Be(PieceType.WhiteRook);
 
                 var m = new Move(new Rook { Color = Color.Black, Square = 98 },
                     new Rook { Color = Color.White, Square = 28 });
 
                 board.MakeMove(m);
-                board.Squares[28].Type.Should().Be(PieceType.Rook);
+                board.Squares[28].Type.Should().Be(PieceType.WhiteRook);
                 board.Squares[28].Color.Should().Be(Color.Black);
             }
 
@@ -529,7 +529,7 @@ namespace Game.Test
                 var board = new Game.Board();
                 board.ParseFen(initialBoardSetupForWhiteRookMove);
 
-                board.Squares[28].Type.Should().Be(PieceType.Rook);
+                board.Squares[28].Type.Should().Be(PieceType.WhiteRook);
 
                 var m = new Move(new Rook { Color = Color.Black, Square = 98 },
                     new Rook { Color = Color.White, Square = 28 });
@@ -622,7 +622,7 @@ namespace Game.Test
                 board.ParseFen(InitialBoardSetupWhiteToMove);
                 var m = new Move(new Pawn { Square = 31, Color = Color.White }, 41);
                 board.MakeMove(m);
-                board.Squares[41].Type.Should().Be(PieceType.Pawn);
+                board.Squares[41].Type.Should().Be(PieceType.WhitePawn);
             }
 
             [Test]
@@ -632,7 +632,7 @@ namespace Game.Test
                 board.ParseFen(InitialBoardSetupWhiteToMove);
                 var m = new Move(new Pawn { Square = 81, Color = Color.White }, 91, new Queen { Square = 91 });
                 board.MakeMove(m);
-                board.Squares[91].Type.Should().Be(PieceType.Queen);
+                board.Squares[91].Type.Should().Be(PieceType.WhiteQueen);
             }
 
             [Test]

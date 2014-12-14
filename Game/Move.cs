@@ -5,51 +5,59 @@ namespace Game
     public class Move
     {
         public bool IsCastleMove { get; private set; }
-        public int FromSquare { get { return PieceToMove.Square; } }
+        public int FromSquare { get; set; }
 
         internal int ToSquare;
-        internal Piece PromotedTo = new EmptyPiece();
-        internal Piece PieceToMove;
+        internal PieceType PromotedTo = PieceType.Empty;
+        internal PieceType FromPiece;
         internal bool IsEnPassantCapture = false;
         internal bool IsPawnStartMove = false;
-        internal Piece Captured = new EmptyPiece();
+        internal PieceType Captured = PieceType.Empty;
+        public int PromotedToSquare { get; set; }
+
+        public Color PromotedToColor { get; set; }
 
         // todo - test detect pawn start move and set PawnStartMove 
-        public Move(Piece piece, int toSquare) : this(piece, toSquare, false)
+        public Move(PieceType fromPiece, int fromSquare, int toSquare) : this(fromPiece, fromSquare, toSquare, false)
         {
         }
 
-        public Move(Piece piece, Piece pieceToCapture)
+        public Move(PieceType fromPiece, int fromSquare, PieceType pieceToCapture, int pieceToCaptureSquare)
         {
-            PieceToMove = piece;
-            ToSquare = pieceToCapture.Square;
+            FromPiece = fromPiece;
+            FromSquare = fromSquare;
+            ToSquare = pieceToCaptureSquare;
             Captured = pieceToCapture;
         }
 
-        public Move(Piece piece, Piece pieceToCapture, Piece promotedTo)
+        public Move(PieceType fromPiece, int fromSquare, PieceType pieceToCapture, int captureSquare, PieceType promotedTo, Color promotedToColor)
         {
-            PieceToMove = piece;
-            ToSquare = pieceToCapture.Square;
+            FromPiece = fromPiece;
+            FromSquare = fromSquare;
+            ToSquare = captureSquare;
             Captured = pieceToCapture;
             PromotedTo = promotedTo;
-            PromotedTo.Color = piece.Color;
-            PromotedTo.Square = ToSquare;
+            PromotedToColor = promotedToColor;
+            PromotedToSquare = ToSquare;
         }
 
-        public Move(Piece piece, int toSquare, Piece promotedTo)
+
+        public Move(PieceType fromPiece, int fromSquare, int toSquare, PieceType promotedTo, Color promotedToColor)
         {
-            PieceToMove = piece;
+            FromPiece = fromPiece;
+            FromSquare = fromSquare;
             ToSquare = toSquare;
             PromotedTo = promotedTo;
-            PromotedTo.Color = piece.Color;
-            PromotedTo.Square = toSquare;
+            PromotedToColor = promotedToColor;
+            PromotedToSquare = toSquare;
         }
 
-        public Move(Piece piece, int toSquare, bool isCastleMove)
+        public Move(PieceType fromPiece, int fromSquare, int toSquare, bool isCastleMove)
         {
-            PieceToMove = piece;
+            FromPiece = fromPiece;
+            FromSquare = fromSquare;
             ToSquare = toSquare;
-            if (piece.Type == PieceType.Pawn && Math.Abs(piece.Square - toSquare) == 20)
+            if ((fromPiece == PieceType.WhitePawn || fromPiece == PieceType.BlackPawn) && Math.Abs(fromSquare - toSquare) == 20)
             {
                 IsPawnStartMove = true;
             }
@@ -58,8 +66,8 @@ namespace Game
 
         public override string ToString()
         {
-            var move = Lookups.MapSquareToRankFile(PieceToMove.Square) + Lookups.MapSquareToRankFile(ToSquare);
-            if (PromotedTo.Type != PieceType.Empty)
+            var move = Lookups.MapSquareToRankFile(FromSquare) + Lookups.MapSquareToRankFile(ToSquare);
+            if (PromotedTo != PieceType.Empty)
             {
                 move += PromotedTo.ToString();
             }

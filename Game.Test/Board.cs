@@ -629,8 +629,8 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetup);
 
                 board.GenerateMoves(board.WhiteKnightPieceList);
-                board.Moves[board.Ply][0].PieceToMove.Square.Should().Be(92);
-                board.Moves[board.Ply][1].PieceToMove.Square.Should().Be(92);
+                board.Moves[board.Ply][0].FromPiece.Square.Should().Be(92);
+                board.Moves[board.Ply][1].FromPiece.Square.Should().Be(92);
             }
 
 
@@ -643,7 +643,7 @@ namespace Game.Test
                 board.ParseFen(initialBoardSetup);
 
                 board.GenerateMoves(board.WhiteKnightPieceList);
-                board.Moves[board.Ply][0].PieceToMove.Square.Should().Be(92);
+                board.Moves[board.Ply][0].FromPiece.Square.Should().Be(92);
                 board.Moves[board.Ply][0].ToSquare.Should().Be(73);
                 board.Moves[board.Ply][1].ToSquare.Should().Be(71);
             }

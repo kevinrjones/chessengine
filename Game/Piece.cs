@@ -3,20 +3,37 @@ using System.Data.SqlClient;
 
 namespace Game
 {
-    [Flags]
     public enum PieceType
     {
         OffBoard = -1,
         Empty = 0,
-        Pawn = 1,
-        Rook = 2,
-        Knight = 4,
-        Bishop = 8,
-        Queen = 16,
-        King = 32,
+        WhitePawn = 1,
+        WhiteRook = 2,
+        WhiteKnight = 3,
+        WhiteBishop = 4,
+        WhiteQueen = 5,
+        WhiteKing = 6,
+        BlackPawn = 7,
+        BlackRook = 8,
+        BlackKnight = 9,
+        BlackBishop = 10,
+        BlackQueen = 11,
+        BlackKing = 12,
     };
 
-    public abstract class Piece
+    public struct Values
+    {
+        public bool Big { get;  set; }
+        public bool Major { get; set; }
+        public bool Minor { get { return !Major; } }
+        public Color Color { get; set; }
+        public bool Slides { get; set; }
+        public int Value { get; set; }
+    }
+
+    
+
+/*    public abstract class Piece
     {
         public PieceType Type = PieceType.Empty;
 
@@ -194,4 +211,5 @@ namespace Game
             return new Pawn { Color = Color, Square = Square };
         }
     }
+ */
 }

@@ -1,4 +1,5 @@
 using System;
+using System;
 using System.Collections.Generic;
 
 namespace Game
@@ -108,21 +109,52 @@ namespace Game
             }
         }
 
-        public static readonly Dictionary<char, Func<Piece>> FenPieceLookup = new Dictionary<char, Func<Piece>>
+        public static readonly Dictionary<char, PieceType> FenPieceLookup = new Dictionary<char, PieceType>
         {
-                {'p', () => new Pawn{Color = Color.Black}},
-                {'P', () => new Pawn{Color = Color.White}},
-                {'r', () => new Rook{Color = Color.Black}},
-                {'R', () => new Rook{Color = Color.White}},
-                {'n', () => new Knight{Color = Color.Black}},
-                {'N', () => new Knight{Color = Color.White}},
-                {'b', () => new Bishop{Color = Color.Black}},
-                {'B', () => new Bishop{Color = Color.White}},
-                {'q', () => new Queen{Color = Color.Black}},
-                {'Q', () => new Queen{Color = Color.White}},
-                {'k', () => new King{Color = Color.Black}},
-                {'K', () => new King{Color = Color.White}},
+                {'p', PieceType.BlackPawn},
+                {'P', PieceType.WhitePawn},
+                {'r', PieceType.BlackRook},
+                {'R', PieceType.WhiteRook},
+                {'n', PieceType.BlackKnight},
+                {'N', PieceType.WhiteKnight},
+                {'b', PieceType.BlackBishop},
+                {'B', PieceType.WhiteBishop},
+                {'q', PieceType.BlackQueen},
+                {'Q', PieceType.WhiteQueen},
+                {'k', PieceType.BlackKing},
+                {'K',PieceType.WhiteKing},
             };
+
+
+        public static Dictionary<PieceType, Values> PieceValues = new Dictionary<PieceType, Values>
+        {
+            { PieceType.WhitePawn, new Values { Big = false, Major = false, Value = 100, Slides = false } },
+            { PieceType.WhiteRook, new Values { Big = true, Major = false, Value = 550, Slides = true } },
+            { PieceType.WhiteKnight, new Values { Big = true, Major = false, Value = 325, Slides = false } },
+            { PieceType.WhiteBishop, new Values { Big = false, Major = false, Value = 325, Slides = true } },
+            { PieceType.WhiteQueen, new Values { Big = true, Major = true, Value = 1000, Slides = true } },
+            { PieceType.WhiteKing, new Values { Big = true, Major = true, Value = 50000, Slides = false } },
+            { PieceType.BlackPawn, new Values { Big = false, Major = false, Value = 100, Slides = false } },
+            { PieceType.BlackRook, new Values { Big = true, Major = false, Value = 550, Slides = true } },
+            { PieceType.BlackKnight, new Values { Big = true, Major = false, Value = 325, Slides = false } },
+            { PieceType.BlackBishop, new Values { Big = false, Major = false, Value = 325, Slides = true } },
+            { PieceType.BlackQueen, new Values { Big = true, Major = true, Value = 1000, Slides = true } },
+            { PieceType.BlackKing, new Values { Big = true, Major = true, Value = 50000, Slides = false } },
+        };
+
+        public static Dictionary<PieceType, int[]> MoveDirections = new Dictionary<PieceType, int[]>
+        {
+            {PieceType.WhiteRook, new[] { -1, -10, 1, 10 }},
+            {PieceType.WhiteKnight, new[] { -8, -19, -21, -12, 8, 19, 21, 12 }},
+            {PieceType.WhiteBishop, new[] { -9, -11, 11, 9 }},
+            {PieceType.WhiteQueen, new[] { -1, -10, 1, 10, -9, -11, 11, 9  }},
+            {PieceType.WhiteKing, new[] { -1, -10, 1, 10, -9, -11, 11, 9  }},
+            {PieceType.BlackRook, new[] { -1, -10, 1, 10 }},
+            {PieceType.BlackKnight, new[] { -8, -19, -21, -12, 8, 19, 21, 12 }},
+            {PieceType.BlackBishop, new[] { -9, -11, 11, 9 }},
+            {PieceType.BlackQueen, new[] { -1, -10, 1, 10, -9, -11, 11, 9  }},
+            {PieceType.BlackKing, new[] { -1, -10, 1, 10, -9, -11, 11, 9  }},
+        };
 
         public static int FileRankToSquare(int file, int rank)
         {
@@ -230,7 +262,7 @@ namespace Game
 
         }
 
-        public static int[] PieceCounts = new int [13];
+        public static int[] PieceCounts = new int[13];
 
     }
 }

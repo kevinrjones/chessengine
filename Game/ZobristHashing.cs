@@ -7,7 +7,7 @@ namespace Game
         public Random random { get; private set; }
 
         // number of pieces = 12, plus Empty = 13
-        internal readonly int[] PieceKeys = new int[12 * 120];
+        internal readonly int[] PieceKeys = new int[13 * 120];
         internal readonly int[] EnPassantKeys = new int[16];
         internal readonly int[] CastleKeys = new int[16];
         internal readonly int SideKey;
@@ -34,34 +34,34 @@ namespace Game
             SideKey = random.Next();
         }
 
-        public int GetKeyForPiece(Piece piece)
+        public int GetKeyForPiece(PieceType piece, int square)
         {
-            var pieceNum = 0;
-            switch (piece.Type)
-            {
-                case PieceType.Empty:
-                    pieceNum = 0;
-                    break;
-                case PieceType.Pawn:
-                    pieceNum = 1;
-                    break;
-                case PieceType.Rook:
-                    pieceNum = 2;
-                    break;
-                case PieceType.Knight:
-                    pieceNum = 3;
-                    break;
-                case PieceType.Bishop:
-                    pieceNum = 4;
-                    break;
-                case PieceType.Queen:
-                    pieceNum = 5;
-                    break;
-                case PieceType.King:
-                    pieceNum = 6;
-                    break;
-            }
-            var index = (pieceNum * 120) + piece.Square;
+            var pieceNum = (int)piece;
+            //switch (piece)
+            //{
+            //    case PieceType.Empty:
+            //        pieceNum = 0;
+            //        break;
+            //    case PieceType.WhitePawn:
+            //        pieceNum = 1;
+            //        break;
+            //    case PieceType.WhiteRook:
+            //        pieceNum = 2;
+            //        break;
+            //    case PieceType.WhiteKnight:
+            //        pieceNum = 3;
+            //        break;
+            //    case PieceType.WhiteBishop:
+            //        pieceNum = 4;
+            //        break;
+            //    case PieceType.WhiteQueen:
+            //        pieceNum = 5;
+            //        break;
+            //    case PieceType.WhiteKing:
+            //        pieceNum = 6;
+            //        break;
+            //}
+            var index = (pieceNum * 120) + square;
             return PieceKeys[index];
         }
 
@@ -85,7 +85,7 @@ namespace Game
 
     public interface IChessHash
     {
-        int GetKeyForPiece(Piece piece );
+        int GetKeyForPiece(PieceType piece, int square );
         int GetCastleKey(CastlePermissions castlePermissions);
         int GetSideKey();
         int GetEnPassantKey(int square);

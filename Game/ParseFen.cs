@@ -21,7 +21,7 @@ namespace Game
             }
         }
 
-        public Piece[] ParseRankAndFile()
+        public PieceType[] ParseRankAndFile()
         {
             var squares = CreateBoard();
 
@@ -35,17 +35,16 @@ namespace Game
                 {
                     var countOfPieces = 1;
 
-                    Piece piece;
+                    PieceType piece;
                     int boardNdx = Lookups.FileRankToSquare(file, rank);
                     if (pieceIdentifier >= '1' && pieceIdentifier <= '8')
                     {
                         int.TryParse(pieceIdentifier.ToString(CultureInfo.CurrentCulture), out countOfPieces);
-                        piece = new EmptyPiece{Square = boardNdx};
+                        piece = PieceType.Empty;
                     }
                     else
                     {
-                        piece = Lookups.FenPieceLookup[pieceIdentifier]();
-                        piece.Square = boardNdx;
+                        piece = Lookups.FenPieceLookup[pieceIdentifier];
                     }
 
                     squares[boardNdx] = piece;
@@ -54,7 +53,7 @@ namespace Game
                     for (var count = 1; count < countOfPieces; count++)
                     {
                         boardNdx = Lookups.FileRankToSquare(file, rank);
-                        squares[boardNdx]= new EmptyPiece {Square = boardNdx};                         
+                        squares[boardNdx] = PieceType.Empty;
                         file++;
                     }
                 }
@@ -103,17 +102,17 @@ namespace Game
             return _sections[SideToMoveSection] == "w" ? Color.White : Color.Black;
         }
 
-        private Piece[] CreateBoard()
+        private PieceType[] CreateBoard()
         {
-            var squares = new Piece[120];
+            var squares = new PieceType[120];
             for (int i = 0; i < squares.Length; i++)
             {
-                squares[i] = new OffBoardPiece();
+                squares[i] = PieceType.OffBoard;
             }
 
             for (int i = 0; i < 64; i++)
             {
-                squares[Lookups.Map64To120(i)] = new EmptyPiece();
+                squares[Lookups.Map64To120(i)] = PieceType.Empty;
             }
 
             return squares;
