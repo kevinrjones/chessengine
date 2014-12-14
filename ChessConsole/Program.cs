@@ -29,8 +29,12 @@ namespace ChessConsole
 
                     while (depth <= 5)
                     {
+                        if (entries.Length < depth)
+                        {
+                            Console.WriteLine("Invalid PERFT string");
+                            return;
+                        }
                         int.TryParse(entries[depth].Split(' ')[1], out count);
-
                         timer.Start();
                         Console.WriteLine("Running with Fen {0} at depth {1}", fen, depth);
                         var board = new Board();
